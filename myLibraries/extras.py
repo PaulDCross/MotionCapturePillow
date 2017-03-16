@@ -6,28 +6,9 @@ import time
 import Vector
 
 def bearingMeasurement(dx, dy):
-    if dx > 0:
-        if dy > 0:
-            bearing = math.atan((dx/dy))
-        elif dy < 0:
-            bearing = math.pi + math.atan((dx/dy))
-        else:
-            bearing = (math.pi)/2
-    elif dx < 0:
-        if dy > 0:
-            bearing = 2*(math.pi) + math.atan((dx/dy))
-        elif dy < 0:
-            bearing = math.pi + math.atan((dx/dy))
-        else:
-            bearing = (3/2)*math.pi
-    else:
-        if dy > 0:
-            bearing = 0
-        elif dy < 0:
-            bearing = math.pi
-        else:
-            bearing = 0
-    return round(bearing*(180/math.pi),1)
+    a = math.atan2(dx,dy)
+    a = a*(a>=0) + (a+2*math.pi)*(a<0)
+    return round(a*(180/math.pi),1)
 
 def makedir(DIR):
     if not os.path.exists(DIR):
