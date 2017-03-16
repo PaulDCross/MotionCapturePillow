@@ -1,4 +1,4 @@
-import myLibraries.mcpLibraries.preprocessingWithClass as pp
+import mcpLibraries.preprocessingWithClass as pp
 import numpy as np
 import cv2
 import os
@@ -7,13 +7,13 @@ import copy
 refPt                      = [(124, 83), (1057, 585)]
 x1,y1                      = refPt[0][0], refPt[0][1]
 x2,y2                      = refPt[1][0], refPt[1][1]
-firstDIR   = os.path.join('ModularProcessing','RelaxedCalibratedState', 'image.png')
+firstDIR   = os.path.join('IndividualProject','RelaxedCalibratedState', 'image.png')
 # Import Image
 img                        = cv2.imread(firstDIR)
 # Initialise Pillow Class
 init                       = pp.ImagePP(img, refPt)
 # Get the region of interest of the image
-ROI, _ , _, _, _                    = init.getFrame()
+ROI, _                     = init.getFrame()
 # Initialise the Pin regions
 Columns, Rows, xyn   = init.chopRC()
 # Read in the pin regions
@@ -43,9 +43,9 @@ for pin in data1:
     cv2.circle(ROI, (int(pin.oldPos.x), int(pin.oldPos.y)), 10, (0,0,255), 2)
 
 # print Columns, Rows
-cv2.imwrite("ProjectPictures_LabeledROI.png", ROI)
-cv2.imwrite("ProjectPictures_ROIRegions.png", ROIregions)
-# cv2.imshow("Camera", ROIregions)
-# cv2.imshow("Camera1", ROI)
+# cv2.imwrite("ProjectPictures_LabeledROI.png", ROI)
+# cv2.imwrite("ProjectPictures_ROIRegions.png", ROIregions)
+cv2.imshow("Camera", ROIregions)
+cv2.imshow("Camera1", ROI)
 if cv2.waitKey(0) & 0xFF == 27:
     cv2.destroyAllWindows()
