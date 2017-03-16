@@ -5,14 +5,14 @@ import cv2
 import math
 import time
 import copy
-import myLibraries.mcpLibraries.preprocessingWithClass as pp
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../")
+import mcpLibraries.preprocessingWithClass as pp
 import myLibraries.Vector as v
 import myLibraries.extras as e
 import myLibraries.Clustering as c
 import itertools
 from scipy.interpolate import griddata, interp2d
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 np.set_printoptions(precision=3, suppress=True, linewidth = 150)
 

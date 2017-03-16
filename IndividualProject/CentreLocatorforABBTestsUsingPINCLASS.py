@@ -5,7 +5,8 @@ import cv2
 import math
 import time
 import copy
-import myLibraries.mcpLibraries.preprocessingWithClass as pp
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../")
+import mcpLibraries.preprocessingWithClass as pp
 import myLibraries.extras as e
 import myLibraries.Vector as v
 import myLibraries.Clustering as c
@@ -26,7 +27,7 @@ Dictionary = {
     'zcoordinate'      : 358.0,
     'zcoordinate2'     : 350.0,
     'Sign'             : ['P', 'N'],
-    'ProgramsData'     : os.path.join("..", "TSP_Pictures"),
+    'ProgramsData'     : os.path.join("..", "..","TSP_Pictures"),
     'refPt'            : [(124, 83), (1057, 585)],
     'Start'            : 1
     # 'numFolders'       : int(1 + len([name for name in os.listdir(DIR) if os.path.isdir(os.path.join(DIR, name))]))
