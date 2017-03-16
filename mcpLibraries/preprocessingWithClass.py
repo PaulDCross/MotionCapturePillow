@@ -1,9 +1,11 @@
 from operator import itemgetter
-import copy
-import math
-import cv2
 import numpy as np
+import sys, os
+import cv2
+import math
 import time
+import copy
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../")
 import myLibraries.extras as e
 import myLibraries.Vector as v
 import matplotlib.pyplot as plt
@@ -64,6 +66,7 @@ class Papillae(object):
         colour = np.array(m.to_rgba(displacement)[:-1])*255
         return colour[::-1]
 
+
 def blobCheck(coords, xyn):
     """ get the blob name from a predefined blobposition"""
     columns, rows = countRnC(xyn)
@@ -72,6 +75,7 @@ def blobCheck(coords, xyn):
             for j in xrange(columns):
                 if coords[0] < xyn[j][0]:
                     return xyn[i + j][2]
+
 
 def countRnC(data):
     Columns = 1
@@ -84,6 +88,7 @@ def countRnC(data):
             Rows += 1
             Columns = 1
     return Columns, Rows
+
 
 class ImagePP(object):
     '''docstring for InitialImage'''
@@ -111,12 +116,11 @@ class ImagePP(object):
         self.keypoints   = self.detectorParameters().detect(ROI)
         return ROI, frame_with_box#, image, thresholded, imaget
 
-
     def dataExtract(self,xyn, coordinates):
         """Setup the frame for blob detection"""
-        data = [Papillae([round(coords[0],1), round(coords[1],1)]).label(xyn) for coords in coordinates]
+        data = [Papillae([round(coords[0],1), round(coords[1],1)]) for coords in coordinates]
+        [pin.label(xyn) for pin in data]
         return data
-
 
     def detectorParameters(self):
         """Set up the blob detector parameters"""
@@ -152,11 +156,12 @@ class ImagePP(object):
                 c.append(item[0])
             minmax.append([min(c),max(c)])
 
-        minmax[len(minmax)-1][1] = self.refPts[1][0] - self.refPts[0][0]
+        minmax[-1][1] = self.refPts[1][0] - self.refPts[0][0]
         minmax.append([self.refPts[1][0] - self.refPts[0][0], self.refPts[1][0] - self.refPts[0][0]])
         midpoints = [(round((minmax[i+1][0] - minmax[i][1]),2))/2 for i in xrange(len(minmax)-1)]
-        return midpoints, minmax
-
+        midpoints.append(0)
+        crosspointsx = np.sum([np.array(minmax).T[1], np.array(midpoints)], axis=0)
+        return crosspointsx
 
     def horizontal(self,Columns,coords):
         minmax = []
@@ -164,14 +169,15 @@ class ImagePP(object):
         for column in chunkedCoords:
             c = []
             for item in column:
-                c.append(item[0])
+                c.append(item[1])
             minmax.append([min(c),max(c)])
 
-        minmax[len(minmax)-1][1] = self.refPts[1][1] - self.refPts[0][1]
+        minmax[-1][1] = self.refPts[1][1] - self.refPts[0][1]
         minmax.append([self.refPts[1][1] - self.refPts[0][1], self.refPts[1][1] - self.refPts[0][1]])
         midpoints = [(round((minmax[i+1][0] - minmax[i][1]),2))/2 for i in xrange(len(minmax)-1)]
-        return midpoints, minmax
-
+        midpoints.append(0)
+        crosspointsy = np.sum([np.array(minmax).T[1], np.array(midpoints)], axis=0)
+        return crosspointsy
 
     def chopRC(self):
         roundedCoordinates, crosspointsx, crosspointsy = [], [], []
@@ -179,18 +185,18 @@ class ImagePP(object):
         coordinates = sorted(coordinates, key=itemgetter(1))
         [roundedCoordinates.append((round(coordinates[i][0],1), round(coordinates[i][1],1))) for i in xrange(len(coordinates))]
         Columns, Rows = countRnC(roundedCoordinates)
-
-        Vmidpoints, Vminmax = self.vertical(Rows,roundedCoordinates)
-        Hmidpoints, Hminmax = self.horizontal(Columns,roundedCoordinates)
-        for i in xrange(len(Hmidpoints)):
-            for j in xrange(len(Vmidpoints)):
-                crosspointsx.append((int(Vmidpoints[j])+int(Vminmax[j][1])))
-                crosspointsy.append((int(Hmidpoints[i])+int(Hminmax[i][1])))
+        x = self.vertical(Rows,roundedCoordinates)
+        y = self.horizontal(Columns,roundedCoordinates)
+        for i in xrange(len(y)-1):
+            for j in xrange(len(x)-1):
+                crosspointsx.append(int(round(x[j], 0)))
+                crosspointsy.append(int(round(y[i], 0)))
         crosspoints = zip(crosspointsx,crosspointsy)
         for i in xrange(len(crosspoints)):
             crosspoints[i] = crosspoints[i]+(i+1,)
         crosspoints = map(list, crosspoints)
         return Columns, Rows, crosspoints
+
 
 def vectors(data, kernel, value, percentage=0.9, BearingImage=None):
     centrePins   = []
@@ -199,8 +205,8 @@ def vectors(data, kernel, value, percentage=0.9, BearingImage=None):
     s            = e.size(value)
     for i in range(data.shape[0]):
         for j in range(data.shape[1]):
-            # textsize = cv2.getTextSize("%.2f" % data[i,j].displacement, cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1)[0]
-            # cv2.putText(BearingImage, "%.2f" % data[i,j].displacement, (int(data[i,j].oldPos.x - (textsize[0]/2.0)), int(data[i,j].oldPos.y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
+            textsize = cv2.getTextSize("%d" % data[i,j].number, cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1)[0]
+            cv2.putText(BearingImage, "%d" % data[i,j].number, (int(data[i,j].oldPos.x - (textsize[0]/2.0)), int(data[i,j].oldPos.y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
             # if data[i,j].state:
             # cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x + (50 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (50 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 1)
             cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x), int(data[i,j].newPos.y)), data[i,j].colour, 2)
@@ -212,6 +218,7 @@ def vectors(data, kernel, value, percentage=0.9, BearingImage=None):
         for pin in centrePins:
             cv2.circle(BearingImage, (int(pin.oldPos.x), int(pin.oldPos.y)), 4, (0, 0, 255), -1)
     return centrePins
+
 
 def vectorLines(data, kernel, value, shape, percentage=0.9, BearingImage=None):
     centrePins   = []
@@ -257,12 +264,14 @@ def vectorLines(data, kernel, value, shape, percentage=0.9, BearingImage=None):
     drawEllipses(Px, Py, BearingImage)
     return centrePins
 
+
 def gaussian():
     X,Y = np.meshgrid(np.linspace(-1,1,10), np.linspace(-1,1,10))
     D = np.sqrt(X*X, Y*Y)
     sigma, mu = 1.0, 0.0
     gaussian = np.array(np.exp(-((D-mu)**2 / (2.0*sigma**2))))
     return gaussian
+
 
 def drawEllipses(Px, Py, BearingImage):
     xcenter = np.mean(Px)
@@ -272,8 +281,8 @@ def drawEllipses(Px, Py, BearingImage):
     ang     = 0
     for i in [0.5, 1, 2, 3]:
         cv2.ellipse(BearingImage, (int(round(xcenter,0)), int(round(ycenter, 0))), (int(round(i*ra, 0)), int(round(i*rb, 0))), ang, 0, 360, (255, 0, 0), 2, 8, 0)
-
     return BearingImage
+
 
 def findCentres(data, kernel, value, percentage=0.9):
     centrePins = []
@@ -306,6 +315,7 @@ def convolute(i, j, data, kernel, s, percentage):
                 total+=1
         if counter>=(total*percentage):
             return data[i,j]
+
 
 def convolution(i, j, data, kernel, s, percentage):
     test      = lambda x: x<0
