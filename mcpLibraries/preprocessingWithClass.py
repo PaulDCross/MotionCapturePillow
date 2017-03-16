@@ -15,14 +15,14 @@ import Queue
 import matplotlib.cm as cm
 import matplotlib as mpl
 
-class Papillae(object):
+class PapillaePin(object):
     """docstring for Papillae"""
     def __init__(self, oldPos):
         self.oldPos  = v.Vector([oldPos[0], oldPos[1]])
         # self.oldSize = oldSize
 
     def label(self, xyn):
-        self.number  = blobCheck([self.oldPos.x, self.oldPos.y], xyn)
+        self.ID  = blobCheck([self.oldPos.x, self.oldPos.y], xyn)
 
     def update(self, newPos):
         if np.isnan(newPos[0]):
@@ -118,7 +118,7 @@ class ImagePP(object):
 
     def dataExtract(self,xyn, coordinates):
         """Setup the frame for blob detection"""
-        data = [Papillae([round(coords[0],1), round(coords[1],1)]) for coords in coordinates]
+        data = [PapillaePin([round(coords[0],1), round(coords[1],1)]) for coords in coordinates]
         [pin.label(xyn) for pin in data]
         return data
 
@@ -205,8 +205,8 @@ def vectors(data, kernel, value, percentage=0.9, BearingImage=None):
     s            = e.size(value)
     for i in range(data.shape[0]):
         for j in range(data.shape[1]):
-            textsize = cv2.getTextSize("%d" % data[i,j].number, cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1)[0]
-            cv2.putText(BearingImage, "%d" % data[i,j].number, (int(data[i,j].oldPos.x - (textsize[0]/2.0)), int(data[i,j].oldPos.y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
+            textsize = cv2.getTextSize("%d" % data[i,j].ID, cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1)[0]
+            cv2.putText(BearingImage, "%d" % data[i,j].ID, (int(data[i,j].oldPos.x - (textsize[0]/2.0)), int(data[i,j].oldPos.y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
             # if data[i,j].state:
             cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x + (30 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (30 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 1)
             cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x), int(data[i,j].newPos.y)), data[i,j].colour, 2)
@@ -368,7 +368,7 @@ def convolution(i, j, data, kernel, s, percentage):
                     # if i == 4:
                     #     if j == 3:
                     #         print m, n, data[int(i+m)][int(j+n)].unit.pos
-                    #         print counterTop, counterLeft, counterRight, counterBottom, data[int(i+m)][int(j+n)].number
+                    #         print counterTop, counterLeft, counterRight, counterBottom, data[int(i+m)][int(j+n)].ID
                 except IndexError:
                     pass
         if (counterTop + counterLeft + counterRight + counterBottom) == 12:

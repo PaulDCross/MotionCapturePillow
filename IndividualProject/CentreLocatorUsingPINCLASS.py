@@ -49,7 +49,7 @@ if (FirstImage.any()):
     Columns, Rows, xyn   = init.chopRC()
     # Find the coordinates of the pins in the first image
     data1                = init.dataExtract(xyn, [x.pt + (x.size,) for x in init.keypoints])
-    data1.sort(key=lambda x: x.number, reverse=False)
+    data1.sort(key=lambda x: x.ID, reverse=False)
 
     SecondImage  = cv2.imread(secondDIR)
     frame        = copy.deepcopy(SecondImage)
@@ -65,7 +65,7 @@ if (FirstImage.any()):
         for pin, coords in zip(data1, data2):
             pin.update([round(coords[1],1), round(coords[2],1)])
 
-        DATA = [[pin.number, pin.oldPos.x, pin.oldPos.y, pin.difference.x, pin.difference.y, pin.state] for pin in data1 if pin.state]
+        DATA = [[pin.ID, pin.oldPos.x, pin.oldPos.y, pin.difference.x, pin.difference.y, pin.state] for pin in data1 if pin.state]
         DATA = np.array(DATA).T
 
         if len(DATA):
@@ -78,7 +78,7 @@ if (FirstImage.any()):
                 zy          = griddata((DATA[1], DATA[2]), DATA[4], (xx, yy), method='cubic')
 
                 data1D      = np.array(zip(xx.reshape(-1), yy.reshape(-1), zx.reshape(-1), zy.reshape(-1)))#, zer.reshape(-1), zer.reshape(-1)))
-                classedData = [pp.Papillae(entry[:2]) for entry in data1D]
+                classedData = [pp.PapillaePin(entry[:2]) for entry in data1D]
                 for pin, entry in zip(classedData, data1D):
                     pin.update(pin.oldPos.add(v.Vector(entry[2:])).pos)
                 DATA = [[pin.oldPos.x, pin.oldPos.y, pin.difference.x, pin.difference.y] for pin in classedData]
