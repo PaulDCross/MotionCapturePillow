@@ -208,7 +208,7 @@ def vectors(data, kernel, value, percentage=0.9, BearingImage=None):
             textsize = cv2.getTextSize("%d" % data[i,j].number, cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1)[0]
             cv2.putText(BearingImage, "%d" % data[i,j].number, (int(data[i,j].oldPos.x - (textsize[0]/2.0)), int(data[i,j].oldPos.y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
             # if data[i,j].state:
-            # cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x + (50 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (50 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 1)
+            cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x + (30 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (30 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 1)
             cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x), int(data[i,j].newPos.y)), data[i,j].colour, 2)
             centrePin = convolution(i, j, data, kernel, s, percentage)
             if centrePin != None:
@@ -251,7 +251,7 @@ def vectorLines(data, kernel, value, shape, percentage=0.9, BearingImage=None):
             if data[i,j].state:
                 # cv2.line(BearingImage, (int(data[i,j].oldPos.x - (1000 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].oldPos.y - (1000 * math.cos(math.radians(data[i,j].bearing))))), (int(data[i,j].newPos.x + (1000 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (1000 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 1)
                 # cv2.circle(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), 4, data[i,j].colour, -1)
-                cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x + (50 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (50 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 2)
+                cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x + (30 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (30 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 2)
             # textsize = cv2.getTextSize("%.2f" % data[i,j].displacement, cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1)[0]
             # cv2.putText(BearingImage, "%.2f" % data[i,j].displacement, (int(data[i,j].oldPos.x - (textsize[0]/2.0)), int(data[i,j].oldPos.y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
             centrePin = convolution(i, j, data, kernel, s, percentage)
