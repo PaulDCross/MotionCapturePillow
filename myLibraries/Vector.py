@@ -17,17 +17,13 @@ class Vector(object):
 
     Methods
     =======
-    add(other)  = returns a Vector object whose x and y components are determined by
-                  adding together the x components of this vector and another vector and
-                  adding together the y components of this vector and another vector.
-    sub(other)  = returns a Vector object whose x and y components are determined by
-                  subtracting together the x components of this vector and another vector and
-                  subtracting together the y components of this vector and another vector.
-    mul(other)  = returns a Vector object whose x and y components are determined by
-                  multiplying together the x components of this vector and another vector and
-                  multiplying together the y components of this vector and another vector.
-    mag         = returns the magnitude of this vector.
-    norm        = returns a Vector object which is this vector's unit vector.
+    add(other)          = returns a Vector object whose x and y components are determined by adding together the x components of this vector and another vector and adding together the y components of this vector and another vector.
+    sub(other)          = returns a Vector object whose x and y components are determined by subtracting together the x components of this vector and another vector and ubtracting together the y components of this vector and another vector.
+    dot(other)          = returns the dot product of this vector and the vector 'other'.
+    mag                 = returns the magnitude of this vector.
+    unit                = returns a Vector object which is this vector's unit vector.
+    mulScalar(scalar)   = returns a Vector object whose x and y components are determined by multiplying the components with the scalar value.  
+    mulVector(vector)   = returns a Vector object whose x and y components are determined by multiplying together the x components of this vector and another vector and multiplying together the y components of this vector and another vector.
     """
     def __init__(self, xy):
         self.x = xy[0]
@@ -51,3 +47,6 @@ class Vector(object):
 
     def mulScalar(self, scalar):
         return Vector([self.x*scalar, self.y*scalar])
+    
+    def mulVector(self, other):
+        return Vector([self.x*other.x, self.y*other.y])
