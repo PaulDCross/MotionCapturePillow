@@ -205,10 +205,10 @@ def vectors(data, kernel, value, percentage=0.9, BearingImage=None):
     s            = e.size(value)
     for i in range(data.shape[0]):
         for j in range(data.shape[1]):
-            textsize = cv2.getTextSize("%d" % data[i,j].ID, cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1)[0]
-            cv2.putText(BearingImage, "%d" % data[i,j].ID, (int(data[i,j].oldPos.x - (textsize[0]/2.0)), int(data[i,j].oldPos.y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
+            # textsize = cv2.getTextSize("%d" % data[i,j].ID, cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1)[0]
+            # cv2.putText(BearingImage, "%d" % data[i,j].ID, (int(data[i,j].oldPos.x - (textsize[0]/2.0)), int(data[i,j].oldPos.y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
             # if data[i,j].state:
-            cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x + (30 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (30 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 1)
+            # cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x + (30 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (30 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 1)
             cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x), int(data[i,j].newPos.y)), data[i,j].colour, 2)
             centrePin = convolution(i, j, data, kernel, s, percentage)
             if centrePin != None:
@@ -322,63 +322,23 @@ def convolution(i, j, data, kernel, s, percentage):
     sliceData = np.array([element.state for row in data[i-s:i+s, j-s:j+s] for element in row])
     # if sliceData.any():
     if True:
-#         counterLeft   = 0
-#         counterRight  = 0
-#         counterTop    = 0
-#         counterBottom = 0
         count = 0
+        expected = -(4*kernel)
         for m in e.linspace(-kernel, kernel, 1, 1, "+"):
             for n in e.linspace(-kernel, kernel, 1, 1, "+"):
                 if m==0:
                     if n==0:
                         continue
+                expected += 2
                 try:
-                    result = data[int(i+m)][int(j+n)].mulVector(v.Vector([m, n]))
-                    count =+ sum([result.x/abs(result.x), result.y/abs(result.y)])
-                    
-#                     if n == -1:
-#                         if data[int(i+m)][int(j+n)].unit.x < 0:
-#                             counterLeft+=1
-#                             # print "Adding to counterLeft"
-#                         if m == -1:
-#                             if data[int(i+m)][int(j+n)].unit.y < 0:
-#                                 counterTop+=1
-#                                 # print "Adding to counterTop"
-#                         if m == 1:
-#                             if data[int(i+m)][int(j+n)].unit.y > 0:
-#                                 counterBottom+=1
-#                                 # print "Adding to counterBottom"
-#                     if n == 0:
-#                         if m == -1:
-#                             if data[int(i+m)][int(j+n)].unit.y < 0:
-#                                 counterTop+=1
-#                                 # print "Adding to counterTop"
-#                         if m == 1:
-#                             if data[int(i+m)][int(j+n)].unit.y > 0:
-#                                 counterBottom+=1
-#                                 # print "Adding to counterBottom"
-#                     if n == 1:
-#                         if data[int(i+m)][int(j+n)].unit.x > 0:
-#                             counterRight+=1
-#                             # print "Adding to counterRight"
-#                         if m == -1:
-#                             if data[int(i+m)][int(j+n)].unit.y < 0:
-#                                 counterTop+=1
-#                                 # print "Adding to counterTop"
-#                         if m == 1:
-#                             if data[int(i+m)][int(j+n)].unit.y > 0:
-#                                 counterBottom+=1
-                                # print "Adding to counterBottom"
-                    # if i == 4:
-                    #     if j == 3:
-                    #         print m, n, data[int(i+m)][int(j+n)].unit.pos
-                    #         print counterTop, counterLeft, counterRight, counterBottom, data[int(i+m)][int(j+n)].ID
+                    result = data[int(i+m)][int(j+n)].unit.mulVector(v.Vector([n, m]))
+                    if result.x != 0:
+                        count += result.x/abs(result.x)
+                    if result.y != 0:
+                        count += result.y/abs(result.y)
                 except IndexError:
                     pass
-#         if (counterTop + counterLeft + counterRight + counterBottom) == 12:
-        if (count) == 12:
-            # print i, j
-            # print counterTop, counterLeft, counterRight, counterBottom
+        if (count) >= expected:
             return data[i,j]
 
 class threadCentres():
