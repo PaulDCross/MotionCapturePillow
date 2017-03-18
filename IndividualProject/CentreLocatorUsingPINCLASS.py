@@ -17,9 +17,9 @@ import matplotlib.pyplot as plt
 np.set_printoptions(precision=3, suppress=True, linewidth = 150)
 
 Dictionary = {
-    'Display'          : 0,
+    'Display'          : 1,
     'Record'           : 0,
-    'interpolating'    : 0,
+    'interpolating'    : 1,
     'extrnl'           : 0,
     'resolutionX'      : 180,
     'resolutionY'      : 100,
@@ -111,13 +111,13 @@ if (FirstImage.any()):
                 meanCentre = np.array(centres).mean(0)
                 # plt.scatter(centrePinPositions[0], centrePinPositions[1], c='r')
                 # [plt.scatter(centre[0], centre[1]) for centre in centres]
+    if Dictionary['Display']:
+        cv2.imshow("Camera2", BearingImage)
+        # cv2.imshow("dst", dst)
+        # cv2.imwrite("TwoSources.png", BearingImage)
 
-    cv2.imshow("Camera2", BearingImage)
-    # cv2.imshow("dst", dst)
-    # cv2.imwrite("TwoSources.png", BearingImage)
-
-    if cv2.waitKey(0) & 0xFF == 27:
+        if cv2.waitKey(0) & 0xFF == 27:
+            cv2.destroyAllWindows()
+            sys.exit()
         cv2.destroyAllWindows()
-        sys.exit()
-    cv2.destroyAllWindows()
-    # plt.show()
+        # plt.show()

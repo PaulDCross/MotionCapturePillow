@@ -19,7 +19,7 @@ np.set_printoptions(precision=3, suppress=True, linewidth = 250)
 Dictionary = {
     'Display'          : 1,
     'Record'           : 0,
-    'interpolating'    : 0,
+    'interpolating'    : 1,
     'extrnl'           : 0,
     'resolutionX'      : 180,
     'resolutionY'      : 100,
@@ -161,7 +161,7 @@ for fold in range(Dictionary['Start'], Dictionary['numFolders']):
                                 pin.update(pin.oldPos.add(v.Vector(entry[2:])).pos)
                             data2D      = np.array(e.chunker(classedData, Dictionary['resolutionX']))
 
-                            centrePins  = pp.vectors(data2D, 1, Dictionary['resolutionX'], 0.9, BearingImage)
+                            centrePins  = pp.vectors(data2D, 2, Dictionary['resolutionX'], 0.9, BearingImage)
                             # centrePins = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
                             # centrePins = pp.findCentres(data2D, 3, Dictionary['resolutionX'], 0.9)
                             # centrePins = pp.threadCentres(data2D, 3, Dictionary['resolutionX'], 0.9).findCentres()
