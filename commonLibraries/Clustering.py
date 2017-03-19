@@ -1,4 +1,4 @@
-import myLibraries.Vector as v
+import Vector as v
 import random
 import numpy as np
 

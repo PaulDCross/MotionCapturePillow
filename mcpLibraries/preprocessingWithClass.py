@@ -6,8 +6,8 @@ import math
 import time
 import copy
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../")
-import myLibraries.extras as e
-import myLibraries.Vector as v
+import commonLibraries.extras as e
+import commonLibraries.Vector as v
 import matplotlib.pyplot as plt
 import random
 import threading

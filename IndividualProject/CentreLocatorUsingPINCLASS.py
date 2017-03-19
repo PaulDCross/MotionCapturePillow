@@ -7,9 +7,9 @@ import time
 import copy
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../")
 import mcpLibraries.preprocessingWithClass as pp
-import myLibraries.Vector as v
-import myLibraries.extras as e
-import myLibraries.Clustering as c
+import commonLibraries.Vector as v
+import commonLibraries.extras as e
+import commonLibraries.Clustering as c
 import itertools
 from scipy.interpolate import griddata, interp2d
 import matplotlib.pyplot as plt
@@ -19,7 +19,7 @@ np.set_printoptions(precision=3, suppress=True, linewidth = 150)
 Dictionary = {
     'Display'          : 1,
     'Record'           : 0,
-    'interpolating'    : 0,
+    'interpolating'    : 1,
     'extrnl'           : 0,
     'resolutionX'      : 180,
     'resolutionY'      : 100,
@@ -41,11 +41,7 @@ centrePins = None
 if (FirstImage.any()):
     # Setup the first image
     init                 = pp.ImagePP(FirstImage, Dictionary['refPts'])
-    ROI1, frame_with_box = init.getFrame() #, Alpha, Beta, Charlie
-    # cv2.imwrite("ProjectPictures_GreyScale.png", Alpha)
-    # cv2.imwrite("ProjectPictures_Binary.png", Beta)
-    # cv2.imwrite("ProjectPictures_Morphology.png", Charlie)
-    # cv2.imwrite("ProjectPictures_ROI.png", ROI1)
+    ROI1, frame_with_box = init.getFrame()
     Columns, Rows, xyn   = init.chopRC()
     # Find the coordinates of the pins in the first image
     data1                = init.dataExtract(xyn, [x.pt + (x.size,) for x in init.keypoints])
@@ -80,17 +76,17 @@ if (FirstImage.any()):
                 classedData = [pp.PapillaePin(entry[:2]) for entry in data1D]
                 for pin, entry in zip(classedData, data1D):
                     pin.update(pin.oldPos.add(v.Vector(entry[2:])).pos)
-                DATA = [[pin.oldPos.x, pin.oldPos.y, pin.difference.x, pin.difference.y] for pin in classedData]
+                DATA        = [[pin.oldPos.x, pin.oldPos.y, pin.difference.x, pin.difference.y] for pin in classedData]
                 data2D      = np.array(e.chunker(classedData, Dictionary['resolutionX']))
 
-                centrePins = pp.vectors(data2D, 1, Dictionary['resolutionX'], 0.9, BearingImage)
+                centrePins  = pp.vectors(data2D, 1, Dictionary['resolutionX'], 0.9, BearingImage)
                 # centrePins  = pp.findCentres(data2D, 3, Dictionary['resolutionX'], 0.9)
                 # centrePins  = pp.threadCentres(data2D, 3, Dictionary['resolutionX'], 0.9).findCentres()
             else:
-                data2D     = np.array(e.chunker(data1, Columns))
+                data2D      = np.array(e.chunker(data1, Columns))
                 # centrePins  = pp.findCentres(data2D, 2, Columns, 0.9)
-                centrePins = pp.vectors(data2D, 1, Columns, 0.9, BearingImage)
-                # centrePins = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
+                centrePins  = pp.vectors(data2D, 1, Columns, 0.9, BearingImage)
+                # centrePins  = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
 
             # plt.figure()
             # ax = plt.subplot(111)

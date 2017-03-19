@@ -7,9 +7,9 @@ import time
 import copy
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../")
 import mcpLibraries.preprocessingWithClass as pp
-import myLibraries.extras as e
-import myLibraries.Vector as v
-import myLibraries.Clustering as c
+import commonLibraries.extras as e
+import commonLibraries.Vector as v
+import commonLibraries.Clustering as c
 import itertools
 from scipy.interpolate import griddata, interp2d
 import matplotlib.pyplot as plt

@@ -1,7 +1,7 @@
 import numpy as np
 import math
 import random
-from myLibraries import Vector, Clustering, extras
+from commonLibraries import Vector, Clustering, extras
 import pygame
 
 class Boids(object):

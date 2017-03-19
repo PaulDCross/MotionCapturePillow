@@ -1,5 +1,4 @@
 import math
-import myLibraries.extras
 
 class Vector(object):
     """Vector(x, y)
@@ -22,7 +21,7 @@ class Vector(object):
     dot(other)          = returns the dot product of this vector and the vector 'other'.
     mag                 = returns the magnitude of this vector.
     unit                = returns a Vector object which is this vector's unit vector.
-    mulScalar(scalar)   = returns a Vector object whose x and y components are determined by multiplying the components with the scalar value.  
+    mulScalar(scalar)   = returns a Vector object whose x and y components are determined by multiplying the components with the scalar value.
     mulVector(vector)   = returns a Vector object whose x and y components are determined by multiplying together the x components of this vector and another vector and multiplying together the y components of this vector and another vector.
     """
     def __init__(self, xy):
@@ -47,6 +46,6 @@ class Vector(object):
 
     def mulScalar(self, scalar):
         return Vector([self.x*scalar, self.y*scalar])
-    
+
     def mulVector(self, other):
         return Vector([self.x*other.x, self.y*other.y])
