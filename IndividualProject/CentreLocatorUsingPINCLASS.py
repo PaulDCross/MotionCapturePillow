@@ -19,7 +19,7 @@ np.set_printoptions(precision=3, suppress=True, linewidth = 150)
 Dictionary = {
     'Display'          : 1,
     'Record'           : 0,
-    'interpolating'    : 1,
+    'interpolating'    : 0,
     'extrnl'           : 0,
     'resolutionX'      : 180,
     'resolutionY'      : 100,
@@ -72,12 +72,11 @@ if (FirstImage.any()):
             if Dictionary['interpolating']:
                 xi, step1   = np.linspace(0, round(BearingImage.shape[1]*0.01)*100, Dictionary['resolutionX'], retstep=True)
                 yi, step2   = np.linspace(0, round(BearingImage.shape[0]*0.01)*100, Dictionary['resolutionY'], retstep=True)
-                zer         = np.zeros((Dictionary['resolutionX'], Dictionary['resolutionY']))
                 xx, yy      = np.meshgrid(xi,yi)
                 zx          = griddata((DATA[1], DATA[2]), DATA[3], (xx, yy), method='cubic')
                 zy          = griddata((DATA[1], DATA[2]), DATA[4], (xx, yy), method='cubic')
 
-                data1D      = np.array(zip(xx.reshape(-1), yy.reshape(-1), zx.reshape(-1), zy.reshape(-1)))#, zer.reshape(-1), zer.reshape(-1)))
+                data1D      = np.array(zip(xx.reshape(-1), yy.reshape(-1), zx.reshape(-1), zy.reshape(-1)))
                 classedData = [pp.PapillaePin(entry[:2]) for entry in data1D]
                 for pin, entry in zip(classedData, data1D):
                     pin.update(pin.oldPos.add(v.Vector(entry[2:])).pos)
