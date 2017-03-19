@@ -30,11 +30,11 @@ Dictionary = {
     'ProgramsData'     : os.path.join("..", "..","TSP_Pictures"),
     'refPt'            : [(124, 83), (1057, 585)],
     'Start'            : 1
-    # 'numFolders'       : int(1 + len([name for name in os.listdir(DIR) if os.path.isdir(os.path.join(DIR, name))]))
+    # 'End'              : int(1 + len([name for name in os.listdir(DIR) if os.path.isdir(os.path.join(DIR, name))]))
 }
 # Dictionary['DIR'] = os.path.join(Dictionary['ProgramsData'], "TSP_Pictures", "NewPillowRepeatabilityTest", "EE{0}".format(Dictionary['ztool']), "{0}mm".format(Dictionary['zcoordinate']))
 Dictionary['DIR']        = os.path.join(Dictionary['ProgramsData'], "NewPillowRotationTest", "RotationTest{0}".format(Dictionary['ztool']), "{0}mm".format(Dictionary['zcoordinate2']))
-Dictionary['numFolders'] = int(1 + len([name for name in os.listdir(Dictionary['DIR']) if os.path.isdir(os.path.join(Dictionary['DIR'], name))]))
+Dictionary['End'] = int(1 + len([name for name in os.listdir(Dictionary['DIR']) if os.path.isdir(os.path.join(Dictionary['DIR'], name))]))
 if Dictionary['Record']:
     savepath = os.path.join('Tracking', *Dictionary['DIR'].split('\\')[2:])
     savepath = os.path.join(savepath)
@@ -45,7 +45,7 @@ if Dictionary['Record']:
     fourcc = cv2.VideoWriter_fourcc(*'CVID')
     out    = cv2.VideoWriter(os.path.join(savepath, "Zhuang.avi"), fourcc, 20.0, (900,500))
 
-for fold in range(Dictionary['Start'], Dictionary['numFolders']):
+for fold in range(Dictionary['Start'], Dictionary['End']):
     directory = os.path.join(Dictionary['DIR'], "%02d" % fold)
     for Type in [name for name in os.listdir(directory) if os.path.isdir(os.path.join(directory, name))]:
         # print MovementType
@@ -150,12 +150,11 @@ for fold in range(Dictionary['Start'], Dictionary['numFolders']):
                         if Dictionary['interpolating']:
                             xi, step1   = np.linspace(0, BearingImage.shape[1], Dictionary['resolutionX'], retstep=True)
                             yi, step2   = np.linspace(0, BearingImage.shape[0], Dictionary['resolutionY'], retstep=True)
-                            zer         = np.zeros((Dictionary['resolutionX'], Dictionary['resolutionY']))
                             xx, yy      = np.meshgrid(xi,yi)
                             zx          = griddata((DATA[1], DATA[2]), DATA[3], (xx, yy), method='cubic')
                             zy          = griddata((DATA[1], DATA[2]), DATA[4], (xx, yy), method='cubic')
 
-                            data1D      = np.array(zip(xx.reshape(-1), yy.reshape(-1), zx.reshape(-1), zy.reshape(-1), zer.reshape(-1), zer.reshape(-1)))
+                            data1D      = np.array(zip(xx.reshape(-1), yy.reshape(-1), zx.reshape(-1), zy.reshape(-1)))
                             classedData = [pp.PapillaePin(entry[:2]) for entry in data1D]
                             for pin, entry in zip(classedData, data1D):
                                 pin.update(pin.oldPos.add(v.Vector(entry[2:])).pos)
