@@ -220,6 +220,21 @@ def vectors(data, kernel, value, percentage=0.9, BearingImage=None):
     return centrePins
 
 
+def overlay(data1, data2, kernel, value, percentage=0.9, BearingImage=None):
+    centrePins   = []
+    extendedPins = []
+    test         = lambda x: x<0
+    s            = e.size(value)
+    for i in range(data1.shape[0]):
+        for j in range(data1.shape[1]):
+            cv2.line(BearingImage, (int(data1[i,j].oldPos.x), int(data1[i,j].oldPos.y)), (int(data1[i,j].newPos.x), int(data1[i,j].newPos.y)), data1[i,j].colour, 1)
+    for i in range(data2.shape[0]):
+        for j in range(data2.shape[1]):
+            textsize = cv2.getTextSize("%d" % data2[i,j].ID, cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1)[0]
+            cv2.putText(BearingImage, "%d" % data2[i,j].ID, (int(data2[i,j].oldPos.x - (textsize[0]/2.0)), int(data2[i,j].oldPos.y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
+            cv2.line(BearingImage, (int(data2[i,j].oldPos.x), int(data2[i,j].oldPos.y)), (int(data2[i,j].newPos.x), int(data2[i,j].newPos.y)), data2[i,j].colour, 2)
+
+
 def vectorLines(data, kernel, value, shape, percentage=0.9, BearingImage=None):
     centrePins   = []
     extendedPins = []

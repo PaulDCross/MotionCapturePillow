@@ -33,6 +33,8 @@ Dictionary = {
 
 firstDIR   = os.path.join('RelaxedCalibratedState', 'image.png')
 secondDIR  = os.path.join('TwoSources', 'image.png')
+firstDIR   = os.path.join("..", "..","TSP_Pictures", "NewPillowRotationTest", "RotationTest167.5", "350.0mm", "01", "Rx", "P", "Internal", "001.png")
+secondDIR  = os.path.join("..", "..","TSP_Pictures", "NewPillowRotationTest", "RotationTest167.5", "350.0mm", "01", "Rx", "P", "Internal", "002.png")
 
 FirstImage = cv2.imread(firstDIR)
 centrePins = None
@@ -79,7 +81,9 @@ if (FirstImage.any()):
                 DATA        = [[pin.oldPos.x, pin.oldPos.y, pin.difference.x, pin.difference.y] for pin in classedData]
                 data2D      = np.array(e.chunker(classedData, Dictionary['resolutionX']))
 
-                centrePins  = pp.vectors(data2D, 1, Dictionary['resolutionX'], 0.9, BearingImage)
+                data2D2     = np.array(e.chunker(data1, Columns))
+                # centrePins  = pp.vectors(data2D, 1, Dictionary['resolutionX'], 0.9, BearingImage)
+                centrePins  = pp.overlay(data2D, data2D2, 1, Dictionary['resolutionX'], 0.9, BearingImage)
                 # centrePins  = pp.findCentres(data2D, 3, Dictionary['resolutionX'], 0.9)
                 # centrePins  = pp.threadCentres(data2D, 3, Dictionary['resolutionX'], 0.9).findCentres()
             else:
@@ -96,7 +100,7 @@ if (FirstImage.any()):
             # # plt.quiver([data.oldPos.x for data in data1], [data.oldPos.y for data in data1], [data.unit.x for data in data1], [data.unit.y for data in data1])
             # handles, labels = ax.get_legend_handles_labels()
 
-            if (len(centrePins) >= 1):
+            if centrePins is not None:
                 if 0 < len(centrePins) < 2:
                     centrePins = centrePins*2
                 centrePinPositions = np.array([positions.oldPos.pos for positions in centrePins]).T
