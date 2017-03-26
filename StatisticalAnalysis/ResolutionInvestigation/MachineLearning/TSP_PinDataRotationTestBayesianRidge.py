@@ -1,5 +1,5 @@
 import os, sys
-sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../../libraries/MachineVisionAndmore")
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "../../../../libraries/MachineVisionAndmore")
 from PillowEdited import rw
 import numpy as np
 import time
@@ -16,9 +16,9 @@ def makedir(DIR):
 
 ztool        = 167.5
 zcoordinate  = 350.0
-directory    = os.path.join("..", "..", "IROS")
+directory    = os.path.join("..", "..", "..", "IROS_graphData")
 makedir(directory)
-DIR          = os.path.join("..", "..", "TSP_Pictures", "NewPillowRotationTest", "RotationTest{0}".format(ztool), "{0}mm".format(zcoordinate))
+DIR          = os.path.join("..", "..", "..", "..", "TSP_Pictures", "NewPillowRotationTest", "RotationTest{0}".format(ztool), "{0}mm".format(zcoordinate))
 # data       = np.load(os.path.join(DIR, "Otsudataline110.npy"))
 data         = np.load(os.path.join(DIR, "dataline110.npy"))
 print "Loaded Data"

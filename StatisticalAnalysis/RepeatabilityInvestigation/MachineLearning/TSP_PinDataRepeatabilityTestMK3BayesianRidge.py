@@ -1,5 +1,5 @@
 import sys, os
-sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../../libraries/MachineVisionAndmore")
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "../../../../libraries/MachineVisionAndmore")
 from Pillow import rw
 import numpy as np
 import time
@@ -16,9 +16,9 @@ def makedir(DIR):
 
 ztool        = 167.5
 zcoordinate  = 358.0
-directory    = os.path.join("..", "..", "IROS")
+directory    = os.path.join("..", "..", "..", "IROS_graphData")
 makedir(directory)
-DIR          = os.path.join("..", "..", "TSP_Pictures", "NewPillowRepeatabilityTest", "EE{0}".format(ztool), "{0}mm".format(zcoordinate))
+DIR          = os.path.join("..", "..", "..", "..", "TSP_Pictures", "NewPillowRepeatabilityTest", "EE{0}".format(ztool), "{0}mm".format(zcoordinate))
 # data       = np.load(os.path.join(DIR, "Otsudataline110.npy"))
 data         = np.load(os.path.join(DIR, "dataline110.npy"))
 print "Loaded Data"
@@ -127,7 +127,7 @@ for single in range(1):
         fig = plt.figure()
         ax  = plt.subplot(1,1,1)
         # ax.set_xticks()
-        head = 'Training Sets: {0}    Testing Sets: {1}    Step distance: {2} Degrees'.format(set_-1, Sets-set_, float(step)/10)
+        head = 'Training Sets: {0}    Testing Sets: {1}    Step distance: {2}mm'.format(set_-1, Sets-set_, float(step)/10)
         plt.title(Name + '\n' + head)
         plt.xlabel("Actual displacement from start position, (mm)")
         plt.ylabel("Predicted displacement from start position, (mm)")
