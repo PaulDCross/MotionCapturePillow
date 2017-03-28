@@ -237,6 +237,7 @@ def vectorLines(data, kernel, value, shape, percentage=0.9, BearingImage=None):
     for i in range(data.shape[0]):
         for j in range(data.shape[1]):
             if data[i,j].state:
+                cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x + (30 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (30 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 2)
                 for m in range(data.shape[0]):
                     for n in range(data.shape[1]):
                         if data[m,n].state:
@@ -249,12 +250,8 @@ def vectorLines(data, kernel, value, shape, percentage=0.9, BearingImage=None):
                                         Px.append(x)
                                         Py.append(y)
                                         cv2.circle(BearingImage, (int(x), int(y)), 1, (100, 100, 100), -1)
-    for i in range(data.shape[0]):
-        for j in range(data.shape[1]):
-            if data[i,j].state:
-                cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x + (30 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (30 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 2)
-    drawEllipses(Px, Py, BearingImage)
-    return centrePins
+    meanx, meany, stdx, stdy = drawEllipses(Px, Py, BearingImage)
+    return [PapillaePin([meanx, meany])], [stdx, stdy]
 
 
 def gaussian():
@@ -266,14 +263,14 @@ def gaussian():
 
 
 def drawEllipses(Px, Py, BearingImage):
-    xcenter = np.mean(Px)
-    ycenter = np.mean(Py)
-    ra      = np.std(Px)
-    rb      = np.std(Py)
-    ang     = 0
+    meanx = np.mean(Px)
+    meany = np.mean(Py)
+    stdx  = np.std(Px)
+    stdy  = np.std(Py)
+    ang   = 0
     for i in [0.5, 1, 2]:#, 3]:
-        cv2.ellipse(BearingImage, (int(round(xcenter,0)), int(round(ycenter, 0))), (int(round(i*ra, 0)), int(round(i*rb, 0))), ang, 0, 360, (255, 0, 0), 2, 8, 0)
-    return BearingImage
+        cv2.ellipse(BearingImage, (int(round(meanx,0)), int(round(meany, 0))), (int(round(i*stdx, 0)), int(round(i*stdy, 0))), ang, 0, 360, (255, 0, 0), 2, 8, 0)
+    return meanx, meany, stdx, stdy
 
 
 def findCentres(data, kernel, value, percentage=0.9):

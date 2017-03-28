@@ -89,8 +89,8 @@ if (FirstImage.any()):
             else:
                 data2D      = np.array(e.chunker(data1, Columns))
                 # centrePins  = pp.findCentres(data2D, 2, Columns, 0.9)
-                centrePins  = pp.vectors(data2D, 1, Columns, 0.9, BearingImage)
-                # centrePins  = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
+                # centrePins  = pp.vectors(data2D, 1, Columns, 0.9, BearingImage)
+                centrePins, stdxy  = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
 
             # plt.figure()
             # ax = plt.subplot(111)
@@ -104,7 +104,7 @@ if (FirstImage.any()):
                 if 0 < len(centrePins) < 2:
                     centrePins = centrePins*2
                 centrePinPositions = np.array([positions.oldPos.pos for positions in centrePins]).T
-                clusters = c.Clusters(centrePinPositions, 5, 2)
+                clusters = c.Clusters(centrePinPositions, 5, 1)
                 centres  = clusters.positions
                 [cv2.circle(BearingImage, (int(centre[0]), int(centre[1])), 3, (255, 0, 0), -1) for centre in centres]
                 meanCentre = np.array(centres).mean(0)
@@ -113,7 +113,7 @@ if (FirstImage.any()):
     if Dictionary['Display']:
         cv2.imshow("Camera2", BearingImage)
         # cv2.imshow("dst", dst)
-        # cv2.imwrite("IDPins.png", BearingImage)
+        # cv2.imwrite("Intersection.png", BearingImage)
 
         if cv2.waitKey(0) & 0xFF == 27:
             cv2.destroyAllWindows()

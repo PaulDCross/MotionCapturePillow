@@ -18,8 +18,8 @@ np.set_printoptions(precision=3, suppress=True, linewidth = 250)
 
 Dictionary = {
     'Display'          : 1,
-    'Record'           : 0,
-    'interpolating'    : 1,
+    'Record'           : 1,
+    'interpolating'    : 0,
     'extrnl'           : 0,
     'resolutionX'      : 180,
     'resolutionY'      : 100,
@@ -36,14 +36,14 @@ Dictionary = {
 Dictionary['DIR']        = os.path.join(Dictionary['ProgramsData'], "NewPillowRotationTest", "RotationTest{0}".format(Dictionary['ztool']), "{0}mm".format(Dictionary['zcoordinate2']))
 Dictionary['End'] = int(1 + len([name for name in os.listdir(Dictionary['DIR']) if os.path.isdir(os.path.join(Dictionary['DIR'], name))]))
 if Dictionary['Record']:
-    savepath = os.path.join('Tracking', *Dictionary['DIR'].split('\\')[2:])
+    savepath = os.path.join('TrackingIntersectionMean', *Dictionary['DIR'].split('\\')[2:])
     savepath = os.path.join(savepath)
     e.makedir(savepath)
     savepath = os.path.join(savepath, "0{}".format(int(1 + len([name for name in os.listdir(savepath) if os.path.isdir(os.path.join(savepath, name))]))))
     e.makedir(savepath)
     # Define the codec and create VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'CVID')
-    out    = cv2.VideoWriter(os.path.join(savepath, "Zhuang.avi"), fourcc, 20.0, (900,500))
+    out    = cv2.VideoWriter(os.path.join(savepath, "Intersections.avi"), fourcc, 20.0, (900,500))
 
 for fold in range(Dictionary['Start'], Dictionary['End']):
     directory = os.path.join(Dictionary['DIR'], "%02d" % fold)
@@ -168,7 +168,7 @@ for fold in range(Dictionary['Start'], Dictionary['End']):
                             data2D     = np.array(e.chunker(data1, Columns))
                             # centrePins = pp.findCentres(data2D, 2, Columns, 0.9)
                             # centrePins = pp.vectors(data2D, 1, Columns, 0.9, BearingImage)
-                            centrePins = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
+                            centrePins, stdxy = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
 
                         # plt.figure()
                         # ax = plt.subplot(111)
@@ -179,7 +179,7 @@ for fold in range(Dictionary['Start'], Dictionary['End']):
                         # handles, labels = ax.get_legend_handles_labels()
 
                     if picture == first:
-                        locationArray    = [['Results - resolution:{}, {}'.format(Dictionary['resolutionX'], Dictionary['resolutionY'])]]
+                        locationArray    = [['Picture Number', 'Mean X Coordinate', 'Mean Y Coordinate', 'std X', 'std Y']]
                     if (len(centrePins) >= 1):
                         if 0 < len(centrePins) < 2:
                             centrePins = centrePins*2
@@ -188,7 +188,7 @@ for fold in range(Dictionary['Start'], Dictionary['End']):
                         centres  = clusters.positions
                         [cv2.circle(BearingImage, (int(centre[0]), int(centre[1])), 4, (255, 0, 0), -1) for centre in centres]
                         meanCentre = np.array(centres).mean(0)
-                        locationArray.append([picture, meanCentre[0], meanCentre[1]])
+                        locationArray.append([picture, meanCentre[0], meanCentre[1], stdxy[0], stdxy[1]])
                         # plt.scatter(centrePinPositions[0], centrePinPositions[1], c='r')
                         # plt.scatter(meanCentre[0], meanCentre[1])
 
@@ -234,7 +234,7 @@ for fold in range(Dictionary['Start'], Dictionary['End']):
             #     print "released"
             #     out.release()
 
-            # e.writeList2File(os.path.join(savepath, "{}{}0{}.txt".format(Type, sign, fold)), locationArray)
+            e.writeList2File(os.path.join(savepath, "{}{}0{}_resolution{}_{}.txt".format(Type, sign, fold, Dictionary['resolutionX'], Dictionary['resolutionY'])), locationArray)
 
             # plt.figure()
             # ax = plt.subplot(311)
