@@ -31,10 +31,10 @@ Dictionary = {
     'Start'            : 1
 }
 
-firstDIR   = os.path.join('RelaxedCalibratedState', 'image.png')
-secondDIR  = os.path.join('TwoSources', 'image.png')
-# firstDIR   = os.path.join("..", "..","TSP_Pictures", "NewPillowRotationTest", "RotationTest167.5", "350.0mm", "01", "Rx", "P", "Internal", "001.png")
-# secondDIR  = os.path.join("..", "..","TSP_Pictures", "NewPillowRotationTest", "RotationTest167.5", "350.0mm", "01", "Rx", "P", "Internal", "002.png")
+# firstDIR   = os.path.join('RelaxedCalibratedState', 'image.png')
+# secondDIR  = os.path.join('TwoSources', 'image.png')
+firstDIR   = os.path.join("..", "..","TSP_Pictures", "NewPillowRotationTest", "RotationTest167.5", "350.0mm", "01", "Rx", "P", "Internal", "001.png")
+secondDIR  = os.path.join("..", "..","TSP_Pictures", "NewPillowRotationTest", "RotationTest167.5", "350.0mm", "01", "Rx", "P", "Internal", "002.png")
 
 FirstImage = cv2.imread(firstDIR)
 centrePins = None
@@ -89,8 +89,8 @@ if (FirstImage.any()):
             else:
                 data2D      = np.array(e.chunker(data1, Columns))
                 # centrePins  = pp.findCentres(data2D, 2, Columns, 0.9)
-                # centrePins  = pp.vectors(data2D, 1, Columns, 0.9, BearingImage)
-                centrePins  = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
+                centrePins  = pp.vectors(data2D, 1, Columns, 0.9, BearingImage)
+                # centrePins  = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
 
             # plt.figure()
             # ax = plt.subplot(111)
@@ -113,7 +113,7 @@ if (FirstImage.any()):
     if Dictionary['Display']:
         cv2.imshow("Camera2", BearingImage)
         # cv2.imshow("dst", dst)
-        # cv2.imwrite("TwoPointIntersections.png", BearingImage)
+        # cv2.imwrite("IDPins.png", BearingImage)
 
         if cv2.waitKey(0) & 0xFF == 27:
             cv2.destroyAllWindows()
