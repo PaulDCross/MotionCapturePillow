@@ -19,7 +19,7 @@ np.set_printoptions(precision=3, suppress=True, linewidth = 150)
 Dictionary = {
     'Display'          : 1,
     'Record'           : 0,
-    'interpolating'    : 1,
+    'interpolating'    : 0,
     'extrnl'           : 0,
     'resolutionX'      : 180,
     'resolutionY'      : 100,
@@ -33,8 +33,8 @@ Dictionary = {
 
 firstDIR   = os.path.join('RelaxedCalibratedState', 'image.png')
 secondDIR  = os.path.join('TwoSources', 'image.png')
-firstDIR   = os.path.join("..", "..","TSP_Pictures", "NewPillowRotationTest", "RotationTest167.5", "350.0mm", "01", "Rx", "P", "Internal", "001.png")
-secondDIR  = os.path.join("..", "..","TSP_Pictures", "NewPillowRotationTest", "RotationTest167.5", "350.0mm", "01", "Rx", "P", "Internal", "002.png")
+# firstDIR   = os.path.join("..", "..","TSP_Pictures", "NewPillowRotationTest", "RotationTest167.5", "350.0mm", "01", "Rx", "P", "Internal", "001.png")
+# secondDIR  = os.path.join("..", "..","TSP_Pictures", "NewPillowRotationTest", "RotationTest167.5", "350.0mm", "01", "Rx", "P", "Internal", "002.png")
 
 FirstImage = cv2.imread(firstDIR)
 centrePins = None
@@ -82,15 +82,15 @@ if (FirstImage.any()):
                 data2D      = np.array(e.chunker(classedData, Dictionary['resolutionX']))
 
                 data2D2     = np.array(e.chunker(data1, Columns))
-                # centrePins  = pp.vectors(data2D, 1, Dictionary['resolutionX'], 0.9, BearingImage)
-                centrePins  = pp.overlay(data2D, data2D2, 1, Dictionary['resolutionX'], 0.9, BearingImage)
+                centrePins  = pp.vectors(data2D, 1, Dictionary['resolutionX'], 0.9, BearingImage)
+                # centrePins  = pp.overlay(data2D, data2D2, 1, Dictionary['resolutionX'], 0.9, BearingImage)
                 # centrePins  = pp.findCentres(data2D, 3, Dictionary['resolutionX'], 0.9)
                 # centrePins  = pp.threadCentres(data2D, 3, Dictionary['resolutionX'], 0.9).findCentres()
             else:
                 data2D      = np.array(e.chunker(data1, Columns))
                 # centrePins  = pp.findCentres(data2D, 2, Columns, 0.9)
-                centrePins  = pp.vectors(data2D, 1, Columns, 0.9, BearingImage)
-                # centrePins  = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
+                # centrePins  = pp.vectors(data2D, 1, Columns, 0.9, BearingImage)
+                centrePins  = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
 
             # plt.figure()
             # ax = plt.subplot(111)
@@ -100,20 +100,20 @@ if (FirstImage.any()):
             # # plt.quiver([data.oldPos.x for data in data1], [data.oldPos.y for data in data1], [data.unit.x for data in data1], [data.unit.y for data in data1])
             # handles, labels = ax.get_legend_handles_labels()
 
-            if centrePins is not None:
+            if (len(centrePins) >= 1):
                 if 0 < len(centrePins) < 2:
                     centrePins = centrePins*2
                 centrePinPositions = np.array([positions.oldPos.pos for positions in centrePins]).T
                 clusters = c.Clusters(centrePinPositions, 5, 2)
                 centres  = clusters.positions
-                [cv2.circle(BearingImage, (int(centre[0]), int(centre[1])), 4, (255, 0, 0), -1) for centre in centres]
+                [cv2.circle(BearingImage, (int(centre[0]), int(centre[1])), 3, (255, 0, 0), -1) for centre in centres]
                 meanCentre = np.array(centres).mean(0)
                 # plt.scatter(centrePinPositions[0], centrePinPositions[1], c='r')
                 # [plt.scatter(centre[0], centre[1]) for centre in centres]
     if Dictionary['Display']:
         cv2.imshow("Camera2", BearingImage)
         # cv2.imshow("dst", dst)
-        # cv2.imwrite("TwoSources.png", BearingImage)
+        # cv2.imwrite("TwoPointIntersections.png", BearingImage)
 
         if cv2.waitKey(0) & 0xFF == 27:
             cv2.destroyAllWindows()
