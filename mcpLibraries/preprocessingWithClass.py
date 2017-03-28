@@ -200,8 +200,6 @@ class ImagePP(object):
 
 def vectors(data, kernel, value, percentage=0.9, BearingImage=None):
     centrePins   = []
-    extendedPins = []
-    test         = lambda x: x<0
     s            = e.size(value)
     for i in range(data.shape[0]):
         for j in range(data.shape[1]):
@@ -209,22 +207,18 @@ def vectors(data, kernel, value, percentage=0.9, BearingImage=None):
             # cv2.putText(BearingImage, "%d" % data[i,j].ID, (int(data[i,j].oldPos.x - (textsize[0]/2.0)), int(data[i,j].oldPos.y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
             # if data[i,j].state:
             # cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x + (30 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (30 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 1)
-            cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x), int(data[i,j].newPos.y)), data[i,j].colour, 2)
+            cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x), int(data[i,j].newPos.y)), data[i,j].colour, 1)
             centrePin = convolution(i, j, data, kernel, s, percentage)
             if centrePin != None:
                 centrePins.append(centrePin)
-    # print len(centrePins)
     if len(centrePins) >= 1:
         for pin in centrePins:
-            cv2.circle(BearingImage, (int(pin.oldPos.x), int(pin.oldPos.y)), 4, (0, 0, 255), -1)
+            cv2.circle(BearingImage, (int(pin.oldPos.x), int(pin.oldPos.y)), 3, (0, 0, 255), -1)
     return centrePins
 
 
 def overlay(data1, data2, kernel, value, percentage=0.9, BearingImage=None):
     centrePins   = []
-    extendedPins = []
-    test         = lambda x: x<0
-    s            = e.size(value)
     for i in range(data1.shape[0]):
         for j in range(data1.shape[1]):
             cv2.line(BearingImage, (int(data1[i,j].oldPos.x), int(data1[i,j].oldPos.y)), (int(data1[i,j].newPos.x), int(data1[i,j].newPos.y)), data1[i,j].colour, 1)
@@ -233,17 +227,13 @@ def overlay(data1, data2, kernel, value, percentage=0.9, BearingImage=None):
             textsize = cv2.getTextSize("%d" % data2[i,j].ID, cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1)[0]
             cv2.putText(BearingImage, "%d" % data2[i,j].ID, (int(data2[i,j].oldPos.x - (textsize[0]/2.0)), int(data2[i,j].oldPos.y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
             cv2.line(BearingImage, (int(data2[i,j].oldPos.x), int(data2[i,j].oldPos.y)), (int(data2[i,j].newPos.x), int(data2[i,j].newPos.y)), data2[i,j].colour, 2)
+    return centrePins
 
 
 def vectorLines(data, kernel, value, shape, percentage=0.9, BearingImage=None):
     centrePins   = []
-    extendedPins = []
-    test         = lambda x: x<0
-    s            = e.size(value)
     Px = []
     Py = []
-    binsx = np.arange(BearingImage.shape[1]+1)
-    binsy = np.arange(BearingImage.shape[0]+1)
     for i in range(data.shape[0]):
         for j in range(data.shape[1]):
             if data[i,j].state:
@@ -258,24 +248,11 @@ def vectorLines(data, kernel, value, shape, percentage=0.9, BearingImage=None):
                                     if 0 <= y < BearingImage.shape[0]:
                                         Px.append(x)
                                         Py.append(y)
-                                        # BearingImage[y,:] = BearingImage[y,:] - 5
-                                        # BearingImage[:,x] = BearingImage[:,x] - 5
                                         cv2.circle(BearingImage, (int(x), int(y)), 1, (100, 100, 100), -1)
     for i in range(data.shape[0]):
         for j in range(data.shape[1]):
             if data[i,j].state:
-                # cv2.line(BearingImage, (int(data[i,j].oldPos.x - (1000 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].oldPos.y - (1000 * math.cos(math.radians(data[i,j].bearing))))), (int(data[i,j].newPos.x + (1000 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (1000 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 1)
-                # cv2.circle(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), 4, data[i,j].colour, -1)
                 cv2.line(BearingImage, (int(data[i,j].oldPos.x), int(data[i,j].oldPos.y)), (int(data[i,j].newPos.x + (30 * math.sin(math.radians(data[i,j].bearing)))), int(data[i,j].newPos.y + (30 * math.cos(math.radians(data[i,j].bearing))))), data[i,j].colour, 2)
-            # textsize = cv2.getTextSize("%.2f" % data[i,j].displacement, cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1)[0]
-            # cv2.putText(BearingImage, "%.2f" % data[i,j].displacement, (int(data[i,j].oldPos.x - (textsize[0]/2.0)), int(data[i,j].oldPos.y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
-            centrePin = convolution(i, j, data, kernel, s, percentage)
-            if centrePin != None:
-                centrePins.append(centrePin)
-    # print len(centrePins)
-    if len(centrePins) >= 1:
-        for pin in centrePins:
-            cv2.circle(BearingImage, (int(pin.oldPos.x), int(pin.oldPos.y)), 4, (0, 0, 255), -1)
     drawEllipses(Px, Py, BearingImage)
     return centrePins
 
@@ -294,7 +271,7 @@ def drawEllipses(Px, Py, BearingImage):
     ra      = np.std(Px)
     rb      = np.std(Py)
     ang     = 0
-    for i in [0.5, 1, 2, 3]:
+    for i in [0.5, 1, 2]:#, 3]:
         cv2.ellipse(BearingImage, (int(round(xcenter,0)), int(round(ycenter, 0))), (int(round(i*ra, 0)), int(round(i*rb, 0))), ang, 0, 360, (255, 0, 0), 2, 8, 0)
     return BearingImage
 
