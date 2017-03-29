@@ -101,157 +101,162 @@ RyPYstdmean = mean(RyPYstd,2);
 
 %% Plot data
 fig1 = figure(1);
-axes1 = axes('Parent',fig1,'XMinorTick','on', 'TickLabelInterpreter','latex');
+set(fig1, 'Position', [0, 0, 1200, 1000]);
 clf
+axes1 = axes('Parent',fig1,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
 grid on;
 hold on;
-
 axis([270 460 160 360]);
-xlabel('X Coordinate, (pixels)','Interpreter','latex');
-ylabel('Y Coordinate, (pixels)','Interpreter','latex');
-plot(RxNXmean, RxNYmean, 'k.-')
-annotation(fig1,'textbox',...
-    [0.56 0.778045253531166 0.150796480500052 0.0637903145202788],...
-    'String',{'Positive rotation','around the x axis'},...
-    'LineStyle',':',...
-    'Interpreter','latex',...
-    'FontSize',16);
-plot(RxPXmean, RxPYmean, 'k.-')
-annotation(fig1,'textbox',...
-    [0.56 0.178045253531166 0.150796480500052 0.0637903145202789],...
-    'String',{'Negative rotation','around the x axis'},...
-    'LineStyle',':',...
-    'Interpreter','latex',...
-    'FontSize',16);
-plot(RyNXmean, RyNYmean, 'k.-')
-annotation(fig1,'textbox',...
-    [0.75 0.438045253531166 0.150796480500052 0.0637903145202789],...
-    'String',{'Negative rotation','around the y axis'},...
-    'LineStyle',':',...
-    'Interpreter','latex',...
-    'FontSize',16);
-plot(RyPXmean, RyPYmean, 'k.-')
-annotation(fig1,'textbox',...
-    [0.25 0.438045253531166 0.150796480500052 0.0637903145202789],...
-    'String',{'Positive rotation','around the y axis'},...
-    'LineStyle',':',...
-    'Interpreter','latex',...
-    'FontSize',16);
+title('Trace of the contact point, tracked using convolution','FontSize',16,'Interpreter','latex');
+xlabel('X Coordinate, (pixels)','Interpreter','latex','fontSize',16);
+ylabel('Y Coordinate, (pixels)','Interpreter','latex','fontSize',16);
+RxN = plot(RxNXmean,RxNYmean,'r.-','DisplayName','Negative rotation around the X axis');
+RxP = plot(RxPXmean,RxPYmean,'g.-','DisplayName','Positive rotation around the X axis');
+RyN = plot(RyNXmean,RyNYmean,'b.-','DisplayName','Negative rotation around the Y axis');
+RyP = plot(RyPXmean,RyPYmean,'k.-','DisplayName','Positive rotation around the Y axis');
+legend1 = legend(axes1,'show');
+set(legend1,'Location','northwest','Interpreter','latex','FontSize',14);
+saveas(fig1,'IntersectionTrackingPlot','epsc');
+saveas(fig1,'IntersectionTrackingPlot');
 
-%%
+%% Variance
 fig2 = figure(2);
+set(fig2, 'Position', [0, 50, 1200, 500]);
 clf
-RxN = subplot(211);
+axes2 = axes('Parent',fig2,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
 grid on;
 hold on;
 axis([0 100 0 100]);
-title('Variance across all ten datasets for rotating in the NEGATIVE direction around the X axis',...
-    'FontSize',16,...
-    'Interpreter','latex');
-xlabel('Image Number', 'Interpreter','latex', 'FontSize',16)
-ylabel('Variance', 'Interpreter','latex', 'FontSize',16)
-RxNXvarPlot = plot(RxNXvar);
-RxNYvarPlot = plot(RxNYvar);
-legend([RxNXvarPlot RxNYvarPlot], 'Variance of X Coordinate', 'Variance of Y Coordinate', 'Location', 'NorthWest', 'FontSize',16)
-
-RxP = subplot(212);
-grid on;
-hold on;
-axis([0 100 0 100]);
-title('Variance across all ten datasets for rotating in the POSITIVE direction around the X axis',...
-    'FontSize',16,...
-    'Interpreter','latex');
-xlabel('Image Number', 'FontSize',16)
-ylabel('Variance', 'FontSize',16)
-RxPXvarPlot = plot(RxPXvar);
-RxPYvarPlot = plot(RxPYvar);
-legend([RxPXvarPlot RxPYvarPlot], 'Variance of X Coordinate', 'Variance of Y Coordinate', 'Location', 'NorthWest', 'FontSize',16)
+title('Variance across all ten datasets for rotating in the NEGATIVE direction around the X axis','FontSize',16,'Interpreter','latex');
+xlabel('Image Number','Interpreter','latex','FontSize',16)
+ylabel('Variance','Interpreter','latex','FontSize',16)
+RxNXvarPlot = plot(RxNXvar,'r','DisplayName','Variance of X Coordinate');
+RxNYvarPlot = plot(RxNYvar,'b','DisplayName','Variance of Y Coordinate');
+legend([RxNXvarPlot RxNYvarPlot], 'Variance of X Coordinate', 'Variance of Y Coordinate', 'Location', 'NorthWest', 'FontSize',16,'Interpreter','latex')
+legend2 = legend(axes2,'show');
+set(legend2,'Location','northwest','Interpreter','latex','FontSize',16);
+saveas(fig2,'IntersectionVarianceRxNegative','epsc');
+saveas(fig2,'IntersectionVarianceRxNegative');
 
 fig3 = figure(3);
-RyN = subplot(211);
-grid on;
-hold on;
-axis([0 100 0 100]);
-title('Variance across all ten datasets for rotating in the NEGATIVE direction around the Y axis',...
-    'FontSize',16,...
-    'Interpreter','latex');
-xlabel('Image Number', 'Interpreter','latex', 'FontSize',16)
-ylabel('Variance', 'Interpreter','latex', 'FontSize',16)
-RyNXvarPlot = plot(RyNXvar);
-RyNYvarPlot = plot(RyNYvar);
-legend([RyNXvarPlot RyNYvarPlot], 'Variance of X Coordinate', 'Variance of Y Coordinate', 'Location', 'NorthWest', 'FontSize',16)
-
-RyP = subplot(212);
-grid on;
-hold on;
-axis([0 100 0 100]);
-title('Variance across all ten datasets for rotating in the POSITIVE direction around the Y axis',...
-    'FontSize',16,...
-    'Interpreter','latex');
-xlabel('Image Number', 'Interpreter','latex', 'FontSize',16)
-ylabel('Variance', 'Interpreter','latex', 'FontSize',16)
-RyPXvarPlot = plot(RyPXvar);
-RyPYvarPlot = plot(RyPYvar);
-legend([RyPXvarPlot RyPYvarPlot], 'Variance of X Coordinate', 'Variance of Y Coordinate', 'Location', 'NorthWest', 'FontSize',16)
-
-%%
-fig3 = figure(4);
+set(fig3, 'Position', [0, 50, 1200, 500]);
 clf
-RxN = subplot(211);
+axes3 = axes('Parent',fig3,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
+grid on;
+hold on;
+axis([0 100 0 100]);
+title('Variance across all ten datasets for rotating in the POSITIVE direction around the X axis','FontSize',16,'Interpreter','latex');
+xlabel('Image Number','FontSize',16,'Interpreter','latex')
+ylabel('Variance','FontSize',16,'Interpreter','latex')
+RxPXvarPlot = plot(RxPXvar,'r','DisplayName','Variance of X Coordinate');
+RxPYvarPlot = plot(RxPYvar,'b','DisplayName','Variance of Y Coordinate');
+legend3 = legend(axes3,'show');
+set(legend3,'Location','northwest','Interpreter','latex','FontSize',16);
+saveas(fig2,'IntersectionVarianceRxPositive','epsc');
+saveas(fig2,'IntersectionVarianceRxPositive');
+
+fig4 = figure(4);
+set(fig4,'Position',[0, 50, 1200, 500]);
+clf
+axes4 = axes('Parent',fig4,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
+grid on;
+hold on;
+axis([0 100 0 100]);
+title('Variance across all ten datasets for rotating in the NEGATIVE direction around the Y axis','FontSize',16,'Interpreter','latex');
+xlabel('Image Number','Interpreter','latex','FontSize',16)
+ylabel('Variance','Interpreter','latex','FontSize',16)
+RyNXvarPlot = plot(RyNXvar,'r','DisplayName','Variance of X Coordinate');
+RyNYvarPlot = plot(RyNYvar,'b','DisplayName','Variance of Y Coordinate');
+legend4 = legend(axes4,'show');
+set(legend4,'Location','northwest','Interpreter','latex','FontSize',16);
+saveas(fig2,'IntersectionVarianceRyNegative','epsc');
+saveas(fig2,'IntersectionVarianceRyNegative');
+
+fig5 = figure(5);
+set(fig5,'Position',[0, 50, 1200, 500]);
+clf
+axes5 = axes('Parent',fig5,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
+grid on;
+hold on;
+axis([0 100 0 100]);
+title('Variance across all ten datasets for rotating in the POSITIVE direction around the Y axis','FontSize',16,'Interpreter','latex');
+xlabel('Image Number','Interpreter','latex','FontSize',16)
+ylabel('Variance','Interpreter','latex','FontSize',16)
+RyPXvarPlot = plot(RyPXvar,'r','DisplayName','Variance of X Coordinate');
+RyPYvarPlot = plot(RyPYvar,'b','DisplayName','Variance of Y Coordinate');
+legend5 = legend(axes5,'show');
+set(legend5,'Location','northwest','Interpreter','latex','FontSize',16);
+saveas(fig2,'IntersectionVarianceRyPositive','epsc');
+saveas(fig2,'IntersectionVarianceRyPositive');
+
+%% Standard Deviation
+fig6 = figure(6);
+set(fig6,'Position',[0, 50, 1200, 500]);
+clf
+axes6 = axes('Parent',fig6,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
 grid on;
 hold on;
 axis([0 100 40 80]);
-title('Standard deviation of the intersections averaged across all ten datasets for rotating in the NEGATIVE direction around the X axis',...
-    'FontSize',16,...
-    'Interpreter','latex');
-xlabel('Image Number', 'Interpreter','latex', 'FontSize',16)
-ylabel({'Standard','deviation'}, 'Interpreter','latex', 'FontSize',16)
-RxNXvarPlot = plot(RxNXstdmean);
-RxNYvarPlot = plot(RxNYstdmean);
-legend([RxNXvarPlot RxNYvarPlot], 'Standard deviation of X Coordinate', 'Standard deviation of Y Coordinate', 'Location', 'NorthWest', 'FontSize',16)
+title({'Standard deviation of the intersections averaged across all ten datasets','for rotating in the NEGATIVE direction around the X axis'},'FontSize',16,'Interpreter','latex');
+xlabel('Image Number','Interpreter','latex','FontSize',16)
+ylabel({'Standard','deviation'},'Interpreter','latex','FontSize',16)
+RxNXstdmeanPlot = plot(RxNXstdmean,'r','DisplayName','Standard deviation of X Coordinate');
+RxNYstdmeanPlot = plot(RxNYstdmean,'b','DisplayName','Standard deviation of Y Coordinate');
+legend6 = legend(axes6,'show');
+set(legend6,'Location','northwest','Interpreter','latex');
+saveas(fig2,'IntersectionStandardDeviationXNegative','epsc');
+saveas(fig2,'IntersectionStandardDeviationXNegative');
 
-RxP = subplot(212);
+fig7 = figure(7);
+set(fig7,'Position',[0, 50, 1200, 500]);
+clf
+axes7 = axes('Parent',fig7,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
 grid on;
 hold on;
 axis([0 100 40 80]);
-title('Standard deviation of the intersections averaged across all ten datasets for rotating in the POSITIVE direction around the X axis',...
-    'FontSize',16,...
-    'Interpreter','latex');
-xlabel('Image Number', 'Interpreter','latex', 'FontSize',16)
-ylabel({'Standard','deviation'}, 'Interpreter','latex', 'FontSize',16)
-RxPXvarPlot = plot(RxPXstdmean);
-RxPYvarPlot = plot(RxPYstdmean);
-legend([RxPXvarPlot RxPYvarPlot], 'Standard deviation of X Coordinate', 'Standard deviation of Y Coordinate', 'Location', 'NorthWest', 'FontSize',16)
+title({'Standard deviation of the intersections averaged across all ten datasets', 'for rotating in the POSITIVE direction around the X axis'},'FontSize',16,'Interpreter','latex');
+xlabel('Image Number','Interpreter','latex','FontSize',16)
+ylabel({'Standard','deviation'},'Interpreter','latex','FontSize',16)
+RxPXstdmeanPlot = plot(RxPXstdmean,'r','DisplayName','Standard deviation of X Coordinate');
+RxPYstdmeanPlot = plot(RxPYstdmean,'b','DisplayName','Standard deviation of Y Coordinate');
+legend7 = legend(axes7,'show');
+set(legend7,'Location','northwest','Interpreter','latex');
+saveas(fig2,'IntersectionStandardDeviationXPositive','epsc');
+saveas(fig2,'IntersectionStandardDeviationXPositive');
 
-figure(5);
-RyN = subplot(211);
+fig8 = figure(8);
+set(fig8,'Position',[0, 50, 1200, 500]);
+clf
+axes8 = axes('Parent',fig8,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
 grid on;
 hold on;
 axis([0 100 40 80]);
-title('Standard deviation of the intersections averaged across all ten datasets for rotating in the NEGATIVE direction around the Y axis',...
-    'FontSize',16,...
-    'Interpreter','latex');
-xlabel('Image Number', 'Interpreter','latex', 'FontSize',16)
-ylabel({'Standard','deviation'}, 'Interpreter','latex', 'FontSize',16)
-RyNXvarPlot = plot(RyNXstdmean);
-RyNYvarPlot = plot(RyNYstdmean);
-legend([RyNXvarPlot RyNYvarPlot], 'Standard deviation of X Coordinate', 'Standard deviation of Y Coordinate', 'Location', 'NorthWest', 'FontSize',16)
+title({'Standard deviation of the intersections averaged across all ten datasets','for rotating in the NEGATIVE direction around the Y axis'},'FontSize',16,'Interpreter','latex');
+xlabel('Image Number','Interpreter','latex','FontSize',16)
+ylabel({'Standard','deviation'},'Interpreter','latex','FontSize',16)
+RyNXstdmeanPlot = plot(RyNXstdmean,'r','DisplayName','Standard deviation of X Coordinate');
+RyNYstdmeanPlot = plot(RyNYstdmean,'b','DisplayName','Standard deviation of Y Coordinate');
+legend8 = legend(axes8,'show');
+set(legend8,'Location','northwest','Interpreter','latex');
+saveas(fig2,'IntersectionStandardDeviationYNegative','epsc');
+saveas(fig2,'IntersectionStandardDeviationYNegative');
 
-RyP = subplot(212);
+fig9 = figure(9);
+set(fig9,'Position',[0, 50, 1200, 500]);
+clf
+axes9 = axes('Parent',fig9,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
 grid on;
 hold on;
 axis([0 100 40 80]);
-title('Standard deviation of the intersections averaged across all ten datasets for rotating in the POSITIVE direction around the Y axis',...
-    'FontSize',16,...
-    'Interpreter','latex');
-xlabel('Image Number', 'Interpreter','latex', 'FontSize',16)
-ylabel({'Standard','deviation'}, 'Interpreter','latex', 'FontSize',16)
-RyPXvarPlot = plot(RyPXstdmean);
-RyPYvarPlot = plot(RyPYstdmean);
-legend([RyPXvarPlot RyPYvarPlot], 'Standard deviation of X Coordinate', 'Standard deviation of Y Coordinate', 'Location', 'NorthWest', 'FontSize',16)
-
-
-
+title({'Standard deviation of the intersections averaged across all ten datasets','for rotating in the POSITIVE direction around the Y axis'},'FontSize',16,'Interpreter','latex');
+xlabel('Image Number','Interpreter','latex','FontSize',16)
+ylabel({'Standard','deviation'},'Interpreter','latex','FontSize',16)
+RyPXstdmeanPlot = plot(RyPXstdmean,'r','DisplayName','Standard deviation of X Coordinate');
+RyPYstdmeanPlot = plot(RyPYstdmean,'b','DisplayName','Standard deviation of Y Coordinate');
+legend9 = legend(axes9,'show');
+set(legend9,'Location','northwest','Interpreter','latex');
+saveas(fig2,'IntersectionStandardDeviationYPositive','epsc');
+saveas(fig2,'IntersectionStandardDeviationYPositive');
 
 % figure(3)
 % clf

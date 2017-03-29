@@ -41,7 +41,6 @@ for k = 1:numfiles
 end
 type{4} = mydata;
 
-
 %% Manage Data
 for i = 1:numfiles
 RxNX(:,i) = type{1}{i}(:,2);
@@ -72,33 +71,96 @@ RyNYvar = var(RyNY,0,2);
 RyPXvar = var(RyPX,0,2);
 RyPYvar = var(RyPY,0,2);
 
-
-
 %% Plot data
-figure(1)
+fig1 = figure(1);
+set(fig1,'Position',[0, 0, 1200, 1000]);
+clf
+axes1 = axes('Parent',fig1,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
 grid on;
 hold on;
-axis([0 900 0 500]);
-plot(RxNXmean, RxNYmean, 'k.-')
-plot(RxPXmean, RxPYmean, 'k.-')
-plot(RyNXmean, RyNYmean, 'k.-')
-plot(RyPXmean, RyPYmean, 'k.-')
+axis([270 450 180 320]);
+title('Trace of the contact point, tracked using convolution','FontSize',16,'Interpreter','latex');
+xlabel('X Coordinate, (pixels)','Interpreter','latex','fontSize',16);
+ylabel('Y Coordinate, (pixels)','Interpreter','latex','fontSize',16);
+RxN = plot(RxNXmean,RxNYmean,'r.-','DisplayName','Negative rotation around the X axis');
+RxP = plot(RxPXmean,RxPYmean,'g.-','DisplayName','Positive rotation around the X axis');
+RyN = plot(RyNXmean,RyNYmean,'b.-','DisplayName','Negative rotation around the Y axis');
+RyP = plot(RyPXmean,RyPYmean,'k.-','DisplayName','Positive rotation around the Y axis');
+legend1 = legend(axes1,'show');
+set(legend1,'Location','northwest','Interpreter','latex','FontSize',16);
+saveas(fig1,'ConvolutionTrackingPlot','epsc');
+saveas(fig1,'ConvolutionTrackingPlot');
 
-figure(2)
+%% Variance
+fig2 = figure(2);
+set(fig2,'Position',[0, 50, 1200, 500]);
+clf
+axes2 = axes('Parent',fig2,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
 grid on;
 hold on;
-subplot(411)
-% plot(RxNXvar)
-plot(RxNYvar)
-subplot(412)
-% plot(RxPXvar)
-plot(RxPYvar)
-subplot(413)
-plot(RyNXvar)
-% plot(RyNYvar)
-subplot(414)
-plot(RyPXvar)
-% plot(RyPYvar)
+axis([0 100 0 100]);
+title('Variance across all ten datasets for rotating in the NEGATIVE direction around the X axis','FontSize',16,'Interpreter','latex');
+xlabel('Image Number','Interpreter','latex','FontSize',16)
+ylabel('Variance','Interpreter','latex','FontSize',16)
+RxNXvarPlot = plot(RxNXvar,'r','DisplayName','Variance of X Coordinate');
+RxNYvarPlot = plot(RxNYvar,'b','DisplayName','Variance of Y Coordinate');
+legend([RxNXvarPlot RxNYvarPlot],'Variance of X Coordinate','Variance of Y Coordinate','Location','NorthWest','FontSize',16,'Interpreter','latex')
+legend2 = legend(axes2,'show');
+set(legend2,'Location','northwest','Interpreter','latex','FontSize',16);
+saveas(fig1,'ConvolutionVarianceRxNegative','epsc');
+saveas(fig1,'ConvolutionVarianceRxNegative');
+
+fig3 = figure(3);
+set(fig3,'Position',[0, 50, 1200, 500]);
+clf
+axes3 = axes('Parent',fig3,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
+grid on;
+hold on;
+axis([0 100 0 100]);
+title('Variance across all ten datasets for rotating in the POSITIVE direction around the X axis','FontSize',16,'Interpreter','latex');
+xlabel('Image Number','FontSize',16,'Interpreter','latex')
+ylabel('Variance','FontSize',16,'Interpreter','latex')
+RxPXvarPlot = plot(RxPXvar,'r','DisplayName','Variance of X Coordinate');
+RxPYvarPlot = plot(RxPYvar,'b','DisplayName','Variance of Y Coordinate');
+legend3 = legend(axes3,'show');
+set(legend3,'Location','northwest','Interpreter','latex','FontSize',16);
+saveas(fig1,'ConvolutionVarianceRxPositive','epsc');
+saveas(fig1,'ConvolutionVarianceRxPositive');
+
+fig4 = figure(4);
+set(fig4,'Position',[0, 50, 1200, 500]);
+clf
+axes4 = axes('Parent',fig4,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
+grid on;
+hold on;
+axis([0 100 0 100]);
+title('Variance across all ten datasets for rotating in the NEGATIVE direction around the Y axis','FontSize',16,'Interpreter','latex');
+xlabel('Image Number','Interpreter','latex','FontSize',16)
+ylabel('Variance','Interpreter','latex','FontSize',16)
+RyNXvarPlot = plot(RyNXvar,'r','DisplayName','Variance of X Coordinate');
+RyNYvarPlot = plot(RyNYvar,'b','DisplayName','Variance of Y Coordinate');
+legend4 = legend(axes4,'show');
+set(legend4,'Location','northwest','Interpreter','latex','FontSize',16);
+saveas(fig1,'ConvolutionVarianceRyNegative','epsc');
+saveas(fig1,'ConvolutionVarianceRyNegative');
+
+fig5 = figure(5);
+set(fig5,'Position',[0, 50, 1200, 500]);
+clf
+axes5 = axes('Parent',fig5,'XMinorTick','on','YMinorTick','on','TickLabelInterpreter','latex','fontSize',16);
+grid on;
+hold on;
+axis([0 100 0 100]);
+title('Variance across all ten datasets for rotating in the POSITIVE direction around the Y axis','FontSize',16,'Interpreter','latex');
+xlabel('Image Number','Interpreter','latex','FontSize',16)
+ylabel('Variance','Interpreter','latex','FontSize',16)
+RyPXvarPlot = plot(RyPXvar,'r','DisplayName','Variance of X Coordinate');
+RyPYvarPlot = plot(RyPYvar,'b','DisplayName','Variance of Y Coordinate');
+legend5 = legend(axes5,'show');
+set(legend5,'Location','northwest','Interpreter','latex','FontSize',16);
+saveas(fig1,'ConvolutionVarianceRyPositive','epsc');
+saveas(fig1,'ConvolutionVarianceRyPositive');
+
 
 % count = 0;
 % for j = 2:3
