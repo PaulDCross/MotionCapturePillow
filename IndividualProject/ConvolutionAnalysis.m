@@ -13,7 +13,7 @@ RyPX = zeros(100,10);
 RyPY = zeros(100,10);
 
 %% Save figures
-path = 'C:\Users\Paul Cross\Documents\Work\UWE Work\Bristol Robotics Lab\TSP_ProgramsData\MotionCapturePillow\IndividualProject';
+path = 'F:\Individual Project\Dissertation\Pictures';
 rez=200; %resolution (dpi) of final graphic
 resolution=get(0,'ScreenPixelsPerInch'); %dont need to change anything here
 
@@ -187,13 +187,13 @@ RyPYvarPlot = plot(RyPYvar,'b','DisplayName','Variance of Y Coordinate');
 legend5 = legend(axes5,'show');
 set(legend5,'Location','northwest','Interpreter','latex','FontSize',16);
 
-%% Save ConvolutionVarianceRyPositive
+% Save ConvolutionVarianceRyPositive
 f=fig5; %f is the handle of the figure you want to export
 figpos=getpixelposition(f); %dont need to change anything here
 set(f,'paperunits','inches','papersize',figpos(3:4)/resolution,'paperposition',[0 0 figpos(3:4)/resolution]); %dont need to change anything here
 print(f,fullfile(path,'ConvolutionVarianceRyPositive'),'-depsc',['-r',num2str(rez)],'-opengl') %save file 
 print(f,fullfile(path,'ConvolutionVarianceRyPositive'),'-dpng',['-r',num2str(rez)],'-opengl') %save file 
-
+%%
 
 
 % count = 0;
