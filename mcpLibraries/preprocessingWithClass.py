@@ -231,7 +231,6 @@ def overlay(data1, data2, kernel, value, percentage=0.9, BearingImage=None):
 
 
 def vectorLines(data, kernel, value, shape, percentage=0.9, BearingImage=None):
-    centrePins   = []
     Px = []
     Py = []
     for i in range(data.shape[0]):
@@ -254,12 +253,12 @@ def vectorLines(data, kernel, value, shape, percentage=0.9, BearingImage=None):
     return [PapillaePin([meanx, meany])], [stdx, stdy]
 
 
-def gaussian():
-    X,Y = np.meshgrid(np.linspace(-1,1,10), np.linspace(-1,1,10))
-    D = np.sqrt(X*X, Y*Y)
-    sigma, mu = 1.0, 0.0
-    gaussian = np.array(np.exp(-((D-mu)**2 / (2.0*sigma**2))))
-    return gaussian
+# def gaussian():
+#     X,Y = np.meshgrid(np.linspace(-1,1,10), np.linspace(-1,1,10))
+#     D = np.sqrt(X*X, Y*Y)
+#     sigma, mu = 1.0, 0.0
+#     gaussian = np.array(np.exp(-((D-mu)**2 / (2.0*sigma**2))))
+#     return gaussian
 
 
 def drawEllipses(Px, Py, BearingImage):
@@ -307,9 +306,6 @@ def convolute(i, j, data, kernel, s, percentage):
 
 
 def convolution(i, j, data, kernel, s, percentage):
-    test      = lambda x: x<0
-    sliceData = np.array([element.state for row in data[i-s:i+s, j-s:j+s] for element in row])
-    # if sliceData.any():
     if True:
         count = 0
         expected = -(4*kernel)
@@ -330,86 +326,86 @@ def convolution(i, j, data, kernel, s, percentage):
         if (count) >= expected:
             return data[i,j]
 
-class threadCentres():
-    def __init__(self, data, kernel, value, percentage=0.9, BearingImage=None):
-        self.data         = data
-        self.kernel       = kernel
-        self.percentage   = percentage
-        self.BearingImage = BearingImage
-        x                 = data.shape[0]-self.kernel
-        y                 = data.shape[1]-self.kernel
-        # self.work       = [((0, 0), (x/2, y/2)),
-        #                    ((x/2, 0), (x, y/2)),
-        #                    ((0, y/2), (x/2, y)),
-        #                    ((x/2, y/2), (x, y))]
+# class threadCentres():
+#     def __init__(self, data, kernel, value, percentage=0.9, BearingImage=None):
+#         self.data         = data
+#         self.kernel       = kernel
+#         self.percentage   = percentage
+#         self.BearingImage = BearingImage
+#         x                 = data.shape[0]-self.kernel
+#         y                 = data.shape[1]-self.kernel
+#         # self.work       = [((0, 0), (x/2, y/2)),
+#         #                    ((x/2, 0), (x, y/2)),
+#         #                    ((0, y/2), (x/2, y)),
+#         #                    ((x/2, y/2), (x, y))]
 
-        self.work       = [((0      , 0      ), (x/4    , y/4    )),
-                           ((x/4    , 0      ), (x/2    , y/4    )),
-                           ((x/2    , 0      ), ((3*x)/4, y/4    )),
-                           (((3*x)/4, 0      ), (x      , y/4    )),
-                           ((0      , y/4    ), (x/4    , y/2    )),
-                           ((x/4    , y/4    ), (x/2    , y/2    )),
-                           ((x/2    , y/4    ), ((3*x)/4, y/2    )),
-                           (((3*x)/4, y/4    ), (x      , y/2    )),
-                           ((0      , y/2    ), (x/4    , (3*y)/4)),
-                           ((x/4    , y/2    ), (x/2    , (3*y)/4)),
-                           ((x/2    , y/2    ), ((3*x)/4, (3*y)/4)),
-                           (((3*x)/4, y/2    ), (x      , (3*y)/4)),
-                           ((0      , (3*y)/4), (x/4    , y      )),
-                           ((x/4    , (3*y)/4), (x/2    , y      )),
-                           ((x/2    , (3*y)/4), ((3*x)/4, y      )),
-                           (((3*x)/4, (3*y)/4), (x      , y      )),
-                           ]
+#         self.work       = [((0      , 0      ), (x/4    , y/4    )),
+#                            ((x/4    , 0      ), (x/2    , y/4    )),
+#                            ((x/2    , 0      ), ((3*x)/4, y/4    )),
+#                            (((3*x)/4, 0      ), (x      , y/4    )),
+#                            ((0      , y/4    ), (x/4    , y/2    )),
+#                            ((x/4    , y/4    ), (x/2    , y/2    )),
+#                            ((x/2    , y/4    ), ((3*x)/4, y/2    )),
+#                            (((3*x)/4, y/4    ), (x      , y/2    )),
+#                            ((0      , y/2    ), (x/4    , (3*y)/4)),
+#                            ((x/4    , y/2    ), (x/2    , (3*y)/4)),
+#                            ((x/2    , y/2    ), ((3*x)/4, (3*y)/4)),
+#                            (((3*x)/4, y/2    ), (x      , (3*y)/4)),
+#                            ((0      , (3*y)/4), (x/4    , y      )),
+#                            ((x/4    , (3*y)/4), (x/2    , y      )),
+#                            ((x/2    , (3*y)/4), ((3*x)/4, y      )),
+#                            (((3*x)/4, (3*y)/4), (x      , y      )),
+#                            ]
 
-        # self.work = [((0, 0), (x, y))]
+#         # self.work = [((0, 0), (x, y))]
 
-        self.s          = extras.size(value)
-        self.q          = Queue.Queue()
-        self.a          = Queue.Queue()
-        self.printLock  = threading.Lock()
+#         self.s          = extras.size(value)
+#         self.q          = Queue.Queue()
+#         self.a          = Queue.Queue()
+#         self.printLock  = threading.Lock()
 
-    def findCentres(self):
-        print len(self.work)
-        for x in range(len(self.work)):
-            t = threading.Thread(target=self.threader)
-            t.daemon = True
-            t.start()
-        for worker in self.work:
-            self.q.put(worker)
-        self.q.join()
-        with self.printLock:
-            return list(self.a.queue)
+#     def findCentres(self):
+#         print len(self.work)
+#         for x in range(len(self.work)):
+#             t = threading.Thread(target=self.threader)
+#             t.daemon = True
+#             t.start()
+#         for worker in self.work:
+#             self.q.put(worker)
+#         self.q.join()
+#         with self.printLock:
+#             return list(self.a.queue)
 
-    def threader(self):
-        while True:
-            count = 0
-            worker = self.q.get()
-            for i in range(worker[0][0], worker[1][0]):
-                for j in range(worker[0][1], worker[1][1]):
-                    with self.printLock:
-                        cv2.line(self.BearingImage, (int(self.data[i,j].oldPos.x), int(self.data[i,j].oldPos.y)), (int(self.data[i,j].newPos.x), int(self.data[i,j].newPos.y)), bearingColour(self.data[i,j].bearing), 2)
-                    centrePin = self.convolute(i, j)
-                    if centrePin != None:
-                        self.a.put(centrePin)
-                    count += 1
-            with self.printLock:
-                if count < 10:
-                    print worker
-            self.q.task_done()
+#     def threader(self):
+#         while True:
+#             count = 0
+#             worker = self.q.get()
+#             for i in range(worker[0][0], worker[1][0]):
+#                 for j in range(worker[0][1], worker[1][1]):
+#                     with self.printLock:
+#                         cv2.line(self.BearingImage, (int(self.data[i,j].oldPos.x), int(self.data[i,j].oldPos.y)), (int(self.data[i,j].newPos.x), int(self.data[i,j].newPos.y)), bearingColour(self.data[i,j].bearing), 2)
+#                     centrePin = self.convolute(i, j)
+#                     if centrePin != None:
+#                         self.a.put(centrePin)
+#                     count += 1
+#             with self.printLock:
+#                 if count < 10:
+#                     print worker
+#             self.q.task_done()
 
-    def convolute(self, i, j):
-        test      = lambda x: x<0
-        sliceData = np.array([element.state for row in self.data[i-self.s:i+self.s, j-self.s:j+self.s] for element in row])
-        if sliceData.any():
-            total   = 0
-            counter = 0
-            for m in extras.linspace(0, -self.kernel, 1, "-"):
-                for n in extras.linspace(-self.kernel, self.kernel, 1, "+"):
-                    if m==0:
-                        if n>=0:
-                            continue
-                    if test(np.dot(self.data[int(i+m)][int(j+n)].unit.pos, self.data[int(i+(-m))][int(j+(-n))].unit.pos)):
-                        counter+=1
-                    total+=1
-            if counter>=(total*self.percentage):
-                return self.data[i,j]
+#     def convolute(self, i, j):
+#         test      = lambda x: x<0
+#         sliceData = np.array([element.state for row in self.data[i-self.s:i+self.s, j-self.s:j+self.s] for element in row])
+#         if sliceData.any():
+#             total   = 0
+#             counter = 0
+#             for m in extras.linspace(0, -self.kernel, 1, "-"):
+#                 for n in extras.linspace(-self.kernel, self.kernel, 1, "+"):
+#                     if m==0:
+#                         if n>=0:
+#                             continue
+#                     if test(np.dot(self.data[int(i+m)][int(j+n)].unit.pos, self.data[int(i+(-m))][int(j+(-n))].unit.pos)):
+#                         counter+=1
+#                     total+=1
+#             if counter>=(total*self.percentage):
+#                 return self.data[i,j]
