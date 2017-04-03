@@ -19,10 +19,10 @@ np.set_printoptions(precision=3, suppress=True, linewidth = 250)
 Dictionary = {
     'Display'          : 1,
     'Record'           : 1,
-    'interpolating'    : 0,
+    'interpolating'    : 1,
     'extrnl'           : 0,
-    'resolutionX'      : 180,
-    'resolutionY'      : 100,
+    'resolutionX'      : 30,
+    'resolutionY'      : 16,
     'ztool'            : 167.5,
     'zcoordinate'      : 358.0,
     'zcoordinate2'     : 350.0,
@@ -43,7 +43,7 @@ if Dictionary['Record']:
     e.makedir(savepath)
     # Define the codec and create VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'CVID')
-    out    = cv2.VideoWriter(os.path.join(savepath, "Intersections.avi"), fourcc, 20.0, (900,500))
+    out    = cv2.VideoWriter(os.path.join(savepath, "InterpolatedIntersections.avi"), fourcc, 20.0, (900,500))
 
 for fold in range(Dictionary['Start'], Dictionary['End']):
     directory = os.path.join(Dictionary['DIR'], "%02d" % fold)
@@ -123,12 +123,7 @@ for fold in range(Dictionary['Start'], Dictionary['End']):
                 start = time.time()
                 pathname2    = os.path.join(PictureFolder, "%003d" % picture) + ".png"
                 SecondImage  = cv2.imread(pathname2)
-                # frame        = copy.deepcopy(SecondImage)
-                # BlackImage   = np.zeros((frame.shape[0], Dictionary['refPt'][1][0] - Dictionary['refPt'][0][0], 3), np.uint8); BlackImage.fill(255)
-                # BearingImage = copy.deepcopy(BlackImage[Dictionary['refPt'][0][1] : Dictionary['refPt'][1][1], 0:Dictionary['refPt'][1][0] - Dictionary['refPt'][0][0]])
                 BearingImage.fill(255)
-                # pathname3    = os.path.join(PictureFolderE, "%003d" % picture) + ".png"
-                # extrnalImage = cv2.imread(pathname3)
 
                 if (SecondImage.any()):
                     print fold, Type, sign, first, picture
@@ -160,8 +155,8 @@ for fold in range(Dictionary['Start'], Dictionary['End']):
                                 pin.update(pin.oldPos.add(v.Vector(entry[2:])).pos)
                             data2D      = np.array(e.chunker(classedData, Dictionary['resolutionX']))
 
-                            centrePins  = pp.vectors(data2D, 2, Dictionary['resolutionX'], 0.9, BearingImage)
-                            # centrePins = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
+                            # centrePins  = pp.vectors(data2D, 2, Dictionary['resolutionX'], 0.9, BearingImage)
+                            centrePins, stdxy = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
                             # centrePins = pp.findCentres(data2D, 3, Dictionary['resolutionX'], 0.9)
                             # centrePins = pp.threadCentres(data2D, 3, Dictionary['resolutionX'], 0.9).findCentres()
                         else:
@@ -169,14 +164,6 @@ for fold in range(Dictionary['Start'], Dictionary['End']):
                             # centrePins = pp.findCentres(data2D, 2, Columns, 0.9)
                             # centrePins = pp.vectors(data2D, 1, Columns, 0.9, BearingImage)
                             centrePins, stdxy = pp.vectorLines(data2D, 1, Columns, BearingImage.shape, 0.9, BearingImage)
-
-                        # plt.figure()
-                        # ax = plt.subplot(111)
-                        # plt.axis([0, Dictionary['refPt'][1][0]-Dictionary['refPt'][0][0], 0, Dictionary['refPt'][1][1]-Dictionary['refPt'][0][1]])
-                        # quiverData = np.array([[data.oldPos.x, data.oldPos.y, data.unit.x, data.unit.y, data.displacement] for data in classedData]).T
-                        # # quiverData = np.array([[data.oldPos.x, data.oldPos.y, data.unit.x, data.unit.y, data.displacement] for data in data1]).T
-                        # plt.quiver(quiverData[0], quiverData[1], quiverData[2], quiverData[3], quiverData[4])#, cmap=plt.cm.coolwarm, linewidth=0)
-                        # handles, labels = ax.get_legend_handles_labels()
 
                     if picture == first:
                         locationArray    = [['Picture Number', 'Mean X Coordinate', 'Mean Y Coordinate', 'std X', 'std Y']]
@@ -189,29 +176,10 @@ for fold in range(Dictionary['Start'], Dictionary['End']):
                         [cv2.circle(BearingImage, (int(centre[0]), int(centre[1])), 4, (255, 0, 0), -1) for centre in centres]
                         meanCentre = np.array(centres).mean(0)
                         locationArray.append([picture, meanCentre[0], meanCentre[1], stdxy[0], stdxy[1]])
-                        # plt.scatter(centrePinPositions[0], centrePinPositions[1], c='r')
-                        # plt.scatter(meanCentre[0], meanCentre[1])
 
                     textsize = cv2.getTextSize(str('{}, {}, {}, {}, {}'.format(fold, Type, sign, first, picture)), cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1)
                     width    = 60
                     cv2.putText(BearingImage, str('{}, {}, {}, {}, {}'.format(fold, Type, sign, first, picture)), (BearingImage.shape[1]-textsize[0][0]-20,BearingImage.shape[0]-textsize[0][1]-20), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
-
-
-                    # frame_with_box[Dictionary['refPt'][0][1]:Dictionary['refPt'][1][1], Dictionary['refPt'][0][0]:Dictionary['refPt'][1][0]] = Frame
-
-                    # Creates a black image and sets each pixel value as white.
-                    # width    = 60
-                    # whiteBar = np.zeros((width, frame_with_box.shape[1], 3), np.uint8); whiteBar.fill(255)
-                    # Sets the region specified to be equal to the white image create above.
-                    # frame_with_box[0:width, 0:frame_with_box.shape[1]] = whiteBar
-                    # Give the frame a title and display the number of blobs.
-                    # cv2.putText(frame_with_box, pathname2, (5, width-15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
-                    # cv2.putText(frame_with_box, "Tracking %d pins" % DATA[-1][0], (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
-
-                    # BlackImage[Dictionary['refPt'][0][1]:Dictionary['refPt'][1][1], 0:Dictionary['refPt'][1][0]-Dictionary['refPt'][0][0]] = BearingImage
-                    # textsize = cv2.getTextSize(str(ls[index][picture]), cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1)
-                    # cv2.putText(BlackImage, str(ls[index][picture]), ((Dictionary['refPt'][1][0]-Dictionary['refPt'][0][0])-textsize[0][0], width-15), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
-                    # video = np.concatenate((BlackImage, frame_with_box), axis=1)
 
                     if Dictionary['Record']:
                         print "Writing"
@@ -236,32 +204,6 @@ for fold in range(Dictionary['Start'], Dictionary['End']):
 
             e.writeList2File(os.path.join(savepath, "{}{}0{}_resolution{}_{}.txt".format(Type, sign, fold, Dictionary['resolutionX'], Dictionary['resolutionY'])), locationArray)
 
-            # plt.figure()
-            # ax = plt.subplot(311)
-            # plt.plot(zip(*locationArray[1:])[1], zip(*locationArray[1:])[2], 'k-', marker="x", label="Centre Coordinate")
-            # handles, labels = ax.get_legend_handles_labels()
-            # # plt.legend(handles, labels, loc=4)
-            # plt.xlabel('X Coordinate of Centre', fontsize=10)
-            # plt.ylabel('Y Coordinate of Centre', fontsize=10)
-            # plt.subplots_adjust(hspace=.4)
-
-            # ax = plt.subplot(312)
-            # plt.plot(zip(*locationArray[1:])[0], zip(*locationArray[1:])[1], 'k-', marker="x", label="X Coordinate")
-            # handles, labels = ax.get_legend_handles_labels()
-            # # plt.legend(handles, labels, loc=4)
-            # plt.xlabel('Picture', fontsize=10)
-            # plt.ylabel('X Coordinate of Centre', fontsize=10)
-            # plt.subplots_adjust(hspace=.4)
-
-            # ax = plt.subplot(313)
-            # plt.plot(zip(*locationArray[1:])[0], zip(*locationArray[1:])[2], 'k-', marker="x", label="Y Coordinate")
-            # handles, labels = ax.get_legend_handles_labels()
-            # # plt.legend(handles, labels, loc=4)
-            # plt.xlabel('Picture', fontsize=10)
-            # plt.ylabel('Y Coordinate of Centre', fontsize=10)
-            # plt.subplots_adjust(hspace=.4)
-
-            # plt.savefig(os.path.join(savepath, 'graph.png'), dpi=None, facecolor='w', edgecolor='w', orientation='portrait', papertype=None, format=None, transparent=False, bbox_inches=None, pad_inches=0.1, frameon=None)
 if Dictionary['Record']:
     print "released"
     out.release()
