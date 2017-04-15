@@ -19,7 +19,7 @@ np.set_printoptions(precision=3, suppress=True, linewidth = 150)
 Dictionary = {
     'Display'          : 1,
     'Record'           : 0,
-    'interpolating'    : 0,
+    'interpolating'    : 1,
     'extrnl'           : 0,
     'resolutionX'      : 30,
     'resolutionY'      : 16,
@@ -34,7 +34,7 @@ Dictionary = {
 # firstDIR   = os.path.join('RelaxedCalibratedState', 'image.png')
 # secondDIR  = os.path.join('TwoSources', 'image.png')
 firstDIR   = os.path.join("..", "..","TSP_Pictures", "NewPillowRotationTest", "RotationTest167.5", "350.0mm", "04", "Rx", "P", "Internal", "001.png")
-secondDIR  = os.path.join("..", "..","TSP_Pictures", "NewPillowRotationTest", "RotationTest167.5", "350.0mm", "04", "Rx", "P", "Internal", "102.png")
+secondDIR  = os.path.join("..", "..","TSP_Pictures", "NewPillowRotationTest", "RotationTest167.5", "350.0mm", "04", "Rx", "P", "Internal", "002.png")
 
 FirstImage = cv2.imread(firstDIR)
 centrePins = None

@@ -27,28 +27,28 @@ resolution=get(0,'ScreenPixelsPerInch'); %dont need to change anything here
 
 %% Get data
 for k = 1:numfiles
-  myfilename = sprintf('Intersection/RxN0%d_resolution180_100.txt', k);
+  myfilename = sprintf('Intersection/RxN0%d_resolution30_16.txt', k);
   M = importdata(myfilename);
   mydata{k} = M.data;
 end
 type{1} = mydata;
 
 for k = 1:numfiles
-  myfilename = sprintf('Intersection/RxP0%d_resolution180_100.txt', k);
+  myfilename = sprintf('Intersection/RxP0%d_resolution30_16.txt', k);
   M = importdata(myfilename);
   mydata{k} = M.data;
 end
 type{2} = mydata;
 
 for k = 1:numfiles
-  myfilename = sprintf('Intersection/RyN0%d_resolution180_100.txt', k);
+  myfilename = sprintf('Intersection/RyN0%d_resolution30_16.txt', k);
   M = importdata(myfilename);
   mydata{k} = M.data;
 end
 type{3} = mydata;
 
 for k = 1:numfiles
-  myfilename = sprintf('Intersection/RyP0%d_resolution180_100.txt', k);
+  myfilename = sprintf('Intersection/RyP0%d_resolution30_16.txt', k);
   M = importdata(myfilename);
   mydata{k} = M.data;
 end

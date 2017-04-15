@@ -4,3 +4,4 @@
 *.db
 TwoSources/Data.npy
 RelaxedCalibratedState/Data.npy
+*.eps
