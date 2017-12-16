@@ -19,7 +19,7 @@ np.set_printoptions(precision=3, suppress=True, linewidth = 150)
 Dictionary = {
     'Display'          : 1,
     'Record'           : 0,
-    'interpolating'    : 1,
+    'interpolating'    : 0,
     'extrnl'           : 0,
     'resolutionX'      : 30,
     'resolutionY'      : 16,
@@ -114,7 +114,7 @@ if (FirstImage.any()):
     if Dictionary['Display']:
         cv2.imshow("Camera2", BearingImage)
         # cv2.imshow("dst", dst)
-        cv2.imwrite("InterpolatedIntersections.png", BearingImage)
+        # cv2.imwrite("InterpolatedIntersections.png", BearingImage)
 
         if cv2.waitKey(0) & 0xFF == 27:
             cv2.destroyAllWindows()

@@ -18,8 +18,8 @@ np.set_printoptions(precision=3, suppress=True, linewidth = 250)
 
 Dictionary = {
     'Display'          : 1,
-    'Record'           : 1,
-    'interpolating'    : 1,
+    'Record'           : 0,
+    'interpolating'    : 0,
     'extrnl'           : 0,
     'resolutionX'      : 30,
     'resolutionY'      : 16,
@@ -34,7 +34,7 @@ Dictionary = {
 }
 # Dictionary['DIR'] = os.path.join(Dictionary['ProgramsData'], "TSP_Pictures", "NewPillowRepeatabilityTest", "EE{0}".format(Dictionary['ztool']), "{0}mm".format(Dictionary['zcoordinate']))
 Dictionary['DIR']        = os.path.join(Dictionary['ProgramsData'], "NewPillowRotationTest", "RotationTest{0}".format(Dictionary['ztool']), "{0}mm".format(Dictionary['zcoordinate2']))
-Dictionary['End'] = int(1 + len([name for name in os.listdir(Dictionary['DIR']) if os.path.isdir(os.path.join(Dictionary['DIR'], name))]))
+Dictionary['End']        = int(1 + len([name for name in os.listdir(Dictionary['DIR']) if os.path.isdir(os.path.join(Dictionary['DIR'], name))]))
 if Dictionary['Record']:
     savepath = os.path.join('TrackingIntersectionMean', *Dictionary['DIR'].split('\\')[2:])
     savepath = os.path.join(savepath)
@@ -202,7 +202,7 @@ for fold in range(Dictionary['Start'], Dictionary['End']):
             #     print "released"
             #     out.release()
 
-            e.writeList2File(os.path.join(savepath, "{}{}0{}_resolution{}_{}.txt".format(Type, sign, fold, Dictionary['resolutionX'], Dictionary['resolutionY'])), locationArray)
+            # e.writeList2File(os.path.join(savepath, "{}{}0{}_resolution{}_{}.txt".format(Type, sign, fold, Dictionary['resolutionX'], Dictionary['resolutionY'])), locationArray)
 
 if Dictionary['Record']:
     print "released"

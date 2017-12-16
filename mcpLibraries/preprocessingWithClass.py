@@ -33,7 +33,7 @@ class PapillaePin(object):
         self.measure()
 
     def measure(self):
-        self.difference   = self.newPos.sub(self.oldPos)
+        self.difference   = v.sub(self.newPos, self.oldPos)
         self.displacement = self.difference.mag()
         if self.displacement > 0:
             self.unit = self.difference.unit()
@@ -184,6 +184,7 @@ class ImagePP(object):
         coordinates = [self.keypoints[i-1].pt for i in xrange(len(self.keypoints))]
         coordinates = sorted(coordinates, key=itemgetter(1))
         [roundedCoordinates.append((round(coordinates[i][0],1), round(coordinates[i][1],1))) for i in xrange(len(coordinates))]
+        # After having rounded and sorted the coordinates.
         Columns, Rows = countRnC(roundedCoordinates)
         x = self.vertical(Rows,roundedCoordinates)
         y = self.horizontal(Columns,roundedCoordinates)
